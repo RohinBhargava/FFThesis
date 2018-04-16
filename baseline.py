@@ -1,4 +1,4 @@
-import tensorflow as tf, pandas as pd, numpy as np, math, random, sys
+import tensorflow as tf, pandas as pd, numpy as np, math, random, sys, sklearn.linear_model
 
 team_dict = {'ARI': 'Arizona Cardinals', 'ATL': 'Atlanta Falcons', 'BAL': 'Baltimore Ravens', 'BUF': 'Buffalo Bills', 'CAR': 'Carolina Panthers', 'CHI': 'Chicago Bears', 'CIN': 'Cincinnati Bengals', 'CLE': 'Cleveland Browns', 'DAL': 'Dallas Cowboys', 'DEN': 'Denver Broncos', 'DET': 'Detroit Lions', 'GNB': 'Green Bay Packers', 'HOU': 'Houston Texans', 'IND': 'Indianapolis Colts', 'JAX': 'Jacksonville Jaguars', 'KAN': 'Kansas City Chiefs', 'LAC': 'Los Angeles Chargers', 'LAR': 'Los Angeles Rams', 'MIA': 'Miami Dolphins', 'MIN': 'Minnesota Vikings', 'NOR': 'New Orleans Saints', 'NWE': 'New England Patriots', 'NYG': 'New York Giants', 'NYJ': 'New York Jets', 'OAK': 'Oakland Raiders', 'PHI': 'Philadelphia Eagles', 'PIT': 'Pittsburgh Steelers', 'SDG': 'San Diego Chargers', 'SEA': 'Seattle Seahawks', 'SFO': 'San Francisco 49ers', 'STL': 'St. Louis Rams', 'TAM': 'Tampa Bay Buccaneers', 'TEN': 'Tennessee Titans', 'WAS': 'Washington Redskins'}
 params = ['Tm', 'FantPos', 'Age', 'G', 'GS', 'Cmp', 'Att', 'Yds', 'TD', 'Int', 'Att', 'Yds', 'Y/A', 'TD', 'Tgt', 'Rec', 'Yds', 'Y/R', 'TD', 'FantPt', 'DKPt', 'FDPt', 'PosRank']
@@ -73,45 +73,51 @@ def allDataParse(start, end):
 sess = tf.InteractiveSession()
 raw = allDataParse(2012,2018)
 
-x = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
-y_ = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
+lr = sklearn.linear_model.LinearRegression()
+for i in range(5):
+    a = lr.fit(raw[:, i], raw[:, i + 1])
+    print np.mean(np.square(a.predict(raw[:, i]) - raw[:, i + 1]), axis=0)
 
-def weight_variable(shape):
-  initial = tf.truncated_normal(shape, stddev=0.1)
-  return tf.Variable(initial)
-
-def bias_variable(shape):
-  initial = tf.constant(0.1, shape=shape)
-  return tf.Variable(initial)
-
-# THIS IS TECHNICALLY TWO LAYERS, MAKE 1
-# TIME SERIES STRATEGIES
-
-W_input = weight_variable([len(params), len(params)])
-b_input = bias_variable([len(params)])
-# W = tf.Variable(np.random.randn(), name="weight")
-# b = tf.Variable(np.random.randn(), name="bias")
-
-# h1 = tf.matmul(x,W_input) + b_input
-y = tf.matmul(x,W_input) + b_input
-
-# W_out = weight_variable([len(raw), len(params)])
-# b_out = bias_variable([len(params)])
+# print np.mean(np.square(a.predict(raw[:, -2]) - raw[:, -1]))
+# x = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
+# y_ = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
 #
-# y = tf.matmul(h1,W_out) + b_out
-cost = tf.reduce_mean(tf.square(y - y_))
-train_step = tf.train.GradientDescentOptimizer(0.0001).minimize(cost)
-
-sess.run(tf.global_variables_initializer())
-
-accuracyl = []
-
-for e in range(10):
-    for i in range(5):
-        train_step.run(feed_dict={x: raw[:, i], y_: raw[:, i + 1]})
-    # MEAN SQUARED ERROR AS EVALUATION METRIC
-    accuracy = tf.reduce_mean(tf.square(y - y_))
-    print e, ':', accuracy.eval(feed_dict={x: raw[:, -2], y_: raw[:, -1]})
+# def weight_variable(shape):
+#   initial = tf.truncated_normal(shape, stddev=0.1)
+#   return tf.Variable(initial)
+#
+# def bias_variable(shape):
+#   initial = tf.constant(0.1, shape=shape)
+#   return tf.Variable(initial)
+#
+# # THIS IS TECHNICALLY TWO LAYERS, MAKE 1
+# # TIME SERIES STRATEGIES
+#
+# W_input = weight_variable([len(params), len(params)])
+# b_input = bias_variable([len(params)])
+# # W = tf.Variable(np.random.randn(), name="weight")
+# # b = tf.Variable(np.random.randn(), name="bias")
+#
+# # h1 = tf.matmul(x,W_input) + b_input
+# y = tf.matmul(x,W_input) + b_input
+#
+# # W_out = weight_variable([len(raw), len(params)])
+# # b_out = bias_variable([len(params)])
+# #
+# # y = tf.matmul(h1,W_out) + b_out
+# cost = tf.reduce_mean(tf.square(y - y_))
+# train_step = tf.train.AdamOptimizer(0.0001).minimize(cost)
+#
+# sess.run(tf.global_variables_initializer())
+#
+# accuracyl = []
+#
+# for e in range(10):
+#     for i in range(4):
+#         train_step.run(feed_dict={x: raw[:, i], y_: raw[:, i + 1]})
+#     # MEAN SQUARED ERROR AS EVALUATION METRIC
+#     accuracy = tf.reduce_mean(tf.square(y - y_))
+#     print e, ':', accuracy.eval(feed_dict={x: raw[:, -2], y_: raw[:, -1]})
 
 # SCIKIT SKLEARN LINEAR REGRESSION, LOOK AT THIS: L1 AND L2 REGRESSION (L2 WILL PROBABLY GIVE BETTER RESULTS)
 
