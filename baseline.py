@@ -1,8 +1,10 @@
-import tensorflow as tf, pandas as pd, numpy as np, math, random, sys, sklearn.linear_model
+import tensorflow as tf, pandas as pd, numpy as np, math, random, sys, sklearn.linear_model, os
 
 team_dict = {'ARI': 'Arizona Cardinals', 'ATL': 'Atlanta Falcons', 'BAL': 'Baltimore Ravens', 'BUF': 'Buffalo Bills', 'CAR': 'Carolina Panthers', 'CHI': 'Chicago Bears', 'CIN': 'Cincinnati Bengals', 'CLE': 'Cleveland Browns', 'DAL': 'Dallas Cowboys', 'DEN': 'Denver Broncos', 'DET': 'Detroit Lions', 'GNB': 'Green Bay Packers', 'HOU': 'Houston Texans', 'IND': 'Indianapolis Colts', 'JAX': 'Jacksonville Jaguars', 'KAN': 'Kansas City Chiefs', 'LAC': 'Los Angeles Chargers', 'LAR': 'Los Angeles Rams', 'MIA': 'Miami Dolphins', 'MIN': 'Minnesota Vikings', 'NOR': 'New Orleans Saints', 'NWE': 'New England Patriots', 'NYG': 'New York Giants', 'NYJ': 'New York Jets', 'OAK': 'Oakland Raiders', 'PHI': 'Philadelphia Eagles', 'PIT': 'Pittsburgh Steelers', 'SDG': 'San Diego Chargers', 'SEA': 'Seattle Seahawks', 'SFO': 'San Francisco 49ers', 'STL': 'St. Louis Rams', 'TAM': 'Tampa Bay Buccaneers', 'TEN': 'Tennessee Titans', 'WAS': 'Washington Redskins'}
 params = ['Tm', 'FantPos', 'Age', 'G', 'GS', 'Cmp', 'Att', 'Yds', 'TD', 'Int', 'Att', 'Yds', 'Y/A', 'TD', 'Tgt', 'Rec', 'Yds', 'Y/R', 'TD', 'FantPt', 'DKPt', 'FDPt', 'PosRank']
 totals = [0] * len(params)
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 def rank(year):
     nfc = pd.read_csv('Data/NFC' + str(year) + '.csv')
@@ -74,11 +76,13 @@ sess = tf.InteractiveSession()
 raw = allDataParse(2012,2018)
 
 lr = sklearn.linear_model.LinearRegression()
+b = [0] * len(params)
 for i in range(5):
     a = lr.fit(raw[:, i], raw[:, i + 1])
-    print np.mean(np.square(a.predict(raw[:, i]) - raw[:, i + 1]), axis=0)
+    b += np.mean(np.square(a.predict(raw[:, i]) - raw[:, i + 1]), axis=0)
+print zip(params,b/5)
+print np.mean(b)/5
 
-# print np.mean(np.square(a.predict(raw[:, -2]) - raw[:, -1]))
 # x = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
 # y_ = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
 #

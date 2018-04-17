@@ -1,3 +1,3 @@
 for i in QB RB WR TE; do
-   echo $i: $(python baseline.py $i)
+   echo $i: $(python -W ignore baseline.py $i)
 done
