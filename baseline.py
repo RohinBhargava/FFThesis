@@ -79,9 +79,10 @@ lr = sklearn.linear_model.LinearRegression()
 b = [0] * len(params)
 for i in range(5):
     a = lr.fit(raw[:, i], raw[:, i + 1])
-    b += np.mean(np.square(a.predict(raw[:, i]) - raw[:, i + 1]), axis=0)
-print zip(params,b/5)
-print np.mean(b)/5
+    # b += np.mean(np.square(a.predict(raw[:, i]) - raw[:, i + 1]), axis=0)
+    b += np.sum(np.square(a.predict(raw[:, i]) - raw[:, i + 1]), axis=0)
+print zip(params,np.sqrt(np.float64(b/(5 * len(raw)))))
+print np.mean(np.sqrt(np.float64(b/(5 * len(raw)))))
 
 # x = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
 # y_ = tf.placeholder(tf.float32, shape=[len(raw), len(params)])
