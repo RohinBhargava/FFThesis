@@ -1,4 +1,4 @@
-Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,Att,Yds,Y/A,TD,Tgt,Rec,Yds,Y/R,TD,FantPt,DKPt,FDPt,VBD,PosRank,OvRank
+Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,RAtt,RYds,Y/A,RTD,Tgt,Rec,WYds,Y/R,WTD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
 1,Darrel Young\YounDa01,WAS,RB,26,13,7,0,0,0,0,0,12,41,3.42,3,9,4,71,17.75,1,35,39.2,37.2,,72,
 2,Will Yeatman\YeatWi00,MIA,,25,8,0,0,0,0,0,0,0,0,,0,,0,0,,0,,,,,102,
 3,T.J. Yates\YateT.00,HOU,QB,26,3,0,15,22,113,0,2,1,0,0.00,0,0,0,0,,0,1,2.5,2.5,,59,

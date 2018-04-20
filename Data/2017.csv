@@ -1,4 +1,4 @@
-Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,Att,Yds,Y/A,TD,Tgt,Rec,Yds,Y/R,TD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
+Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,RAtt,RYds,Y/A,RTD,Tgt,Rec,WYds,Y/R,WTD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
 1,Todd Gurley*+\GurlTo01,LAR,RB,23,15,15,0,0,0,0,0,279,1305,4.68,13,87,64,788,12.31,6,319,,391.3,351.3,192,1,1
 2,Le'Veon Bell*+\BellLe00,PIT,RB,25,15,15,0,0,0,0,0,321,1291,4.02,9,106,85,655,7.71,2,259,,349.6,299.1,132,2,2
 3,Kareem Hunt*\HuntKa00,KAN,RB,22,16,16,0,0,0,0,0,272,1327,4.88,8,63,53,455,8.58,3,242,,302.2,268.7,115,3,3

@@ -1,4 +1,4 @@
-Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,Att,Yds,Y/A,TD,Tgt,Rec,Yds,Y/R,TD,FantPt,DKPt,FDPt,VBD,PosRank,OvRank
+Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,RAtt,RYds,Y/A,RTD,Tgt,Rec,WYds,Y/R,WTD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
 1,Jared Abbrederis\AbbrJa00,GNB,WR,25,9,0,0,0,0,0,0,0,0,,0,16,9,111,12.33,0,13,23.1,15.6,,153,
 2,Ameer Abdullah\AbduAm00,DET,RB,22,16,9,0,0,0,0,0,143,597,4.17,2,38,25,183,7.32,1,92,125.0,104.5,,42,
 3,Davante Adams\AdamDa01,GNB,WR,23,13,12,0,0,0,0,0,0,0,,0,94,50,483,9.66,1,58,109.3,81.3,,83,

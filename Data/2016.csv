@@ -1,4 +1,4 @@
-Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,Att,Yds,Y/A,TD,Tgt,Rec,Yds,Y/R,TD,FantPt,DKPt,FDPt,VBD,PosRank,OvRank
+Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,RAtt,RYds,Y/A,RTD,Tgt,Rec,WYds,Y/R,WTD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
 1,David Johnson*+\JohnDa08,ARI,RB,25,16,16,0,0,0,0,0,293,1239,4.23,16,120,80,879,10.99,4,328,416.8,367.8,191,1,1
 2,Ezekiel Elliott*+\ElliEz00,DAL,RB,21,15,15,0,0,0,0,0,322,1631,5.07,15,39,32,363,11.34,1,293,332.4,309.4,156,2,2
 3,Aaron Rodgers*\RodgAa00,GNB,QB,33,16,16,401,610,4428,40,7,67,369,5.51,4,0,0,0,,0,382,397.0,387.0,114,1,3

@@ -1,4 +1,4 @@
-Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,Att,Yds,Y/A,TD,Tgt,Rec,Yds,Y/R,TD,FantPt,DKPt,FDPt,VBD,PosRank,OvRank
+Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,RAtt,RYds,Y/A,RTD,Tgt,Rec,WYds,Y/R,WTD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
 1,Joe Adams\AdamJo01,CAR,WR,23,9,0,0,0,0,0,0,3,13,4.33,0,1,1,7,7.00,0,-4,,-3.5,,264,
 2,Kris Adams\AdamKr00,IND,WR,25,3,0,0,0,0,0,0,0,0,,0,8,2,26,13.00,0,3,4.6,3.6,,187,
 3,Kyle Adams\AdamKy00,CHI,TE,24,15,2,0,0,0,0,0,0,0,,0,8,4,40,10.00,0,4,8.0,6.0,,81,

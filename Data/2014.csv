@@ -1,4 +1,4 @@
-Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,Att,Yds,Y/A,TD,Tgt,Rec,Yds,Y/R,TD,FantPt,DKPt,FDPt,VBD,PosRank,OvRank
+Rk,Name,Tm,FantPos,Age,G,GS,Cmp,Att,Yds,TD,Int,RAtt,RYds,Y/A,RTD,Tgt,Rec,WYds,Y/R,WTD,FantPt,PPR,DKPt,FDPt,VBD,PosRank,OvRank
 1,Davante Adams\AdamDa01,GNB,WR,22,16,11,0,0,0,0,0,0,0,,0,66,38,446,11.74,3,63,103.6,81.6,,78,
 2,Ray Agnew\AgneRa00,CLE,RB,23,12,9,0,0,0,0,0,2,2,1.00,0,9,3,15,5.00,0,2,4.7,3.2,,146,
 3,Kamar Aiken\AikeKa00,BAL,WR,25,16,0,0,0,0,0,0,0,0,,0,32,24,267,11.13,3,45,71.7,56.7,,100,
