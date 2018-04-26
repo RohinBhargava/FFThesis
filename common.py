@@ -1,4 +1,4 @@
-import pandas as pd, numpy as np, math, random, sys
+import pandas as pd, numpy as np, math, random, sys, os
 
 TEAM_DICT = {'ARI': 'Arizona Cardinals', 'ATL': 'Atlanta Falcons', 'BAL': 'Baltimore Ravens', 'BUF': 'Buffalo Bills', 'CAR': 'Carolina Panthers', 'CHI': 'Chicago Bears', 'CIN': 'Cincinnati Bengals', 'CLE': 'Cleveland Browns', 'DAL': 'Dallas Cowboys', 'DEN': 'Denver Broncos', 'DET': 'Detroit Lions', 'GNB': 'Green Bay Packers', 'HOU': 'Houston Texans', 'IND': 'Indianapolis Colts', 'JAX': 'Jacksonville Jaguars', 'KAN': 'Kansas City Chiefs', 'LAC': 'Los Angeles Chargers', 'LAR': 'Los Angeles Rams', 'MIA': 'Miami Dolphins', 'MIN': 'Minnesota Vikings', 'NOR': 'New Orleans Saints', 'NWE': 'New England Patriots', 'NYG': 'New York Giants', 'NYJ': 'New York Jets', 'OAK': 'Oakland Raiders', 'PHI': 'Philadelphia Eagles', 'PIT': 'Pittsburgh Steelers', 'SDG': 'San Diego Chargers', 'SEA': 'Seattle Seahawks', 'SFO': 'San Francisco 49ers', 'STL': 'St. Louis Rams', 'TAM': 'Tampa Bay Buccaneers', 'TEN': 'Tennessee Titans', 'WAS': 'Washington Redskins'}
 PARAMS = ['Tm', 'FantPos', 'Age', 'G', 'GS', 'Cmp', 'Att', 'Yds', 'TD', 'Int', 'RAtt', 'RYds', 'Y/A', 'RTD', 'Tgt', 'Rec', 'WYds', 'Y/R', 'WTD', 'FantPt', 'DKPt', 'FDPt', 'PosRank']
@@ -64,10 +64,12 @@ def parsePl(year, tsd, n, pos):
     return tsd
 
 def allDataParse(start, end):
-    tsd = dict()
-    for i in range(start, end):
-        tsd = parsePl(i, tsd, i - start + 1, sys.argv[1])
-    darr = []
-    for i in tsd:
-        darr.append(tsd[i])
-    return np.array(darr)
+    if not os.path.exists('Data/serial/' + sys.argv[1] + str(start) + str(end) + '.npy'):
+        tsd = dict()
+        for i in range(start, end):
+            tsd = parsePl(i, tsd, i - start + 1, sys.argv[1])
+        darr = []
+        for i in tsd:
+            darr.append(tsd[i])
+        np.save('Data/serial/' + sys.argv[1] + str(start) + str(end) + '.npy', np.array(darr))
+    return np.load('Data/serial/' + sys.argv[1] + str(start) + str(end) + '.npy')
