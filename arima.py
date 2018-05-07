@@ -5,6 +5,13 @@ from sklearn.cross_validation import train_test_split
 import warnings, sys
 
 raw = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+raw = tup[0]
+for i in range(len(tup[0])):
+    raw[i] -= tup[1]
+    for j in range(len(tup[2])):
+        for k in range(len(tup[2][j])):
+            if tup[2][j][k] != 0:
+                raw[i][j][k] /= tup[2][j][k]
 
 total_loss = 0
 
@@ -17,7 +24,6 @@ for i in range(len(PARAMS)):
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
         for j in range(len(X)):
-            print X[j]
             arima = ARIMA(X[j], (len(X[j]) - 3,0,1))
 
             fit = arima.fit(disp=0)
@@ -30,9 +36,9 @@ for i in range(len(PARAMS)):
     loss = mean_squared_error(Y, np.array(preds))
     total_loss += loss
 
-    print PARAMS[i], loss
+    print (PARAMS[i], loss)
 
-print total_loss/len(PARAMS)
+print (total_loss/len(PARAMS))
 
 # mse_arima = []
 # mse_arima_means = []
@@ -69,6 +75,3 @@ print total_loss/len(PARAMS)
 
 # print zip(PARAMS, mse_a)
 # print np.mean(mse_a)
-
-
-

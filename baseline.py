@@ -3,11 +3,24 @@ from common import YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np
 from sklearn.metrics import mean_squared_error
 from sklearn.cross_validation import train_test_split
 
-raw = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+raw = tup[0]
+for i in range(len(tup[0])):
+    raw[i] -= tup[1]
+    for j in range(len(tup[2])):
+        for k in range(len(tup[2][j])):
+            if tup[2][j][k] != 0:
+                raw[i][j][k] /= tup[2][j][k]
+            else:
+                raw[i][j][k] = 0
+
 total_loss = 0
 
 for i in range(len(PARAMS)):
-    X_train, X_test, Y_train, Y_test = train_test_split(raw[:, :-1, i], raw[:, -1, i], test_size=0.3, random_state=1)
+    X_train = raw[:, :-2, i]
+    X_test = raw[:, 1:-1, i]
+    Y_train = raw[:, -2, i]
+    Y_test = raw[:, -1, i]
 
     lr = sklearn.linear_model.LinearRegression()
 
@@ -18,9 +31,9 @@ for i in range(len(PARAMS)):
 
     total_loss += loss
 
-    print PARAMS[i], loss
+    print (PARAMS[i], loss)
 
-print total_loss/len(PARAMS)
+print (total_loss/len(PARAMS))
 
 # b = [0] * len(PARAMS)
 # for i in range(YDIFF):
