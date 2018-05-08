@@ -5,14 +5,6 @@ from sklearn.cross_validation import train_test_split
 
 tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
 raw = tup[0]
-for i in range(len(tup[0])):
-    raw[i] -= tup[1]
-    for j in range(len(tup[2])):
-        for k in range(len(tup[2][j])):
-            if tup[2][j][k] != 0:
-                raw[i][j][k] /= tup[2][j][k]
-            else:
-                raw[i][j][k] = 0
 
 total_loss = 0
 

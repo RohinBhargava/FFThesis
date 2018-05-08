@@ -7,8 +7,8 @@ YEAR_END = 2018
 YDIFF = YEAR_END - YEAR_ST - 1
 
 # def rank(year):
-#     nfc = pd.read_csv('Data/NFC' + str(year) + '.csv')
-#     afc = pd.read_csv('Data/AFC' + str(year) + '.csv')
+#     nfc = pd.read_csv('Data/Rank/NFC' + str(year) + '.csv')
+#     afc = pd.read_csv('Data/Rank/AFC' + str(year) + '.csv')
 #     ranks = []
 #     i = 0
 #     j = 0
@@ -61,8 +61,8 @@ def parsePl(year, tsd, n, pos):
     for i in tsd:
         if len(tsd[i]) == n - 1:
             tsd[i].append([0] * len(PARAMS))
-        elif len(tsd[i]) < n - 1:
-            del tsd[i]
+        # elif len(tsd[i]) < n - 1:
+        #     del tsd[i]
     return tsd
 
 def allDataParse(start, end, pos):
@@ -75,4 +75,12 @@ def allDataParse(start, end, pos):
             darr.append(tsd[i])
         np.save('Data/serial/' + pos + str(start) + str(end) + '.npy', np.array(darr))
     data = np.float32(np.load('Data/serial/' + pos + str(start) + str(end) + '.npy'))
-    return data, np.mean(data, axis = 0), np.std(data, axis = 0)
+    mean = np.mean(data, axis = 0)
+    std = np.std(data, axis = 0)
+    for i in range(len(data)):
+        data[i] -= mean
+        for j in range(len(std)):
+            for k in range(len(std[j])):
+                if std[j][k] > 1:
+                    data[i][j][k] /= std[j][k]
+    return data, mean, std

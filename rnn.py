@@ -5,16 +5,8 @@ from sklearn.cross_validation import train_test_split
 from tensorflow.contrib import rnn
 import warnings, tensorflow as tf, sys
 
-raw = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
 raw = tup[0]
-for i in range(len(tup[0])):
-    raw[i] -= tup[1]
-    for j in range(len(tup[2])):
-        for k in range(len(tup[2][j])):
-            if tup[2][j][k] != 0:
-                raw[i][j][k] /= tup[2][j][k]
-            else:
-                raw[i][j][k] = 0
 
 total_loss = 0
 for i in range(len(PARAMS)):
@@ -52,7 +44,7 @@ for i in range(len(PARAMS)):
     sess.run(tf.global_variables_initializer())
 
     accuracyl = []
-    for b in range(10):
+    for b in range(50):
         train_step.run(feed_dict={x: X_train.reshape(len(X_train), YDIFF - 1, 1), y_: Y_train.reshape(len(Y_train), 1)})
         accuracy = tf.losses.mean_squared_error(y_, y)
         accuracyl.append(accuracy.eval(feed_dict={x: X_test.reshape(len(X_test), YDIFF - 1, 1), y_: Y_test.reshape(len(Y_test), 1)}))

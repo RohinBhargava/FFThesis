@@ -2,16 +2,13 @@ from common import YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 from sklearn.cross_validation import train_test_split
-import warnings, sys
+import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm
 
-raw = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+
+
+
+tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
 raw = tup[0]
-for i in range(len(tup[0])):
-    raw[i] -= tup[1]
-    for j in range(len(tup[2])):
-        for k in range(len(tup[2][j])):
-            if tup[2][j][k] != 0:
-                raw[i][j][k] /= tup[2][j][k]
 
 total_loss = 0
 
@@ -23,15 +20,23 @@ for i in range(len(PARAMS)):
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
+        h = 0
         for j in range(len(X)):
-            arima = ARIMA(X[j], (len(X[j]) - 3,0,1))
+            # arima = ARIMA(X[j], (1, 1, 2))
+            arima = sm.tsa.statespace.SARIMAX(X[j], order=(1,1,1), enforce_stationarity=False, enforce_invertibility=False)
 
-            fit = arima.fit(disp=0)
+            fit = arima.fit(disp=False)
             # print fit.summary()
+            # print (fit.forecast())
 
-            y_test_pred = fit.forecast()[0][0]
+            y_test_pred = fit.forecast()[0]
 
             preds.append(y_test_pred)
+
+            if abs(y_test_pred - Y[h]) > 20:
+                plt.plot(X[j])
+                plt.show()
+            h += 1
 
     loss = mean_squared_error(Y, np.array(preds))
     total_loss += loss
@@ -44,7 +49,7 @@ print (total_loss/len(PARAMS))
 # mse_arima_means = []
 # m = []
 
-# for p in range(5):
+# for p in range(4):
 #     for q in range(5):
 #         for d in range(5):
 #             try:
