@@ -1,4 +1,4 @@
-Player,Tm,Cmp,Att,Yds,TD,Int,Sk,Yds,Lng,Rate,RAtt,RYds,RTD,Lng,Tgt,Rec,WYds,WTD,Lng,Fmb,FL
+Player,Tm,Cmp,Att,Yds,TD,Int,Sk,LYds,Lng,Rate,RAtt,RYds,RTD,Lng,Tgt,Rec,WYds,WTD,Lng,Fmb,FL
 Christian Ponder\PondCh00,MIN,35,52,352,2,2,4,25,23,83.2,4,13,0,7,0,0,0,0,0,1,1
 Adrian Peterson\PeteAd01,MIN,0,0,0,0,0,0,0,0,,17,79,0,32,8,7,50,0,18,0,0
 Percy Harvin\HarvPe00,MIN,0,0,0,0,0,0,0,0,,2,1,0,2,14,11,133,0,23,1,0

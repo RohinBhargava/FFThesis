@@ -19,4 +19,8 @@ for pos in positions:
 
 for year in os.listdir('Data/Game'):
     for week in os.listdir('Data/Game/' + year):
-        for game in 
+        for game in os.listdir('Data/Game/' + year + '/' + week):
+            teams = game.split('.csv')[0].split(' at ')
+            abbr = map(lambda x : DICT_TEAM[x], teams)
+            stats = pd.read_csv(game)
+            
