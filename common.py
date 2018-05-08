@@ -73,6 +73,11 @@ def allDataParse(start, end, pos):
         darr = []
         for i in tsd:
             darr.append(tsd[i])
+        name = open('Data/Names/' + pos, 'w')
+        for na in tsd.keys():
+            name.write(na + '\n')
+        name.flush()
+        name.close()
         np.save('Data/serial/' + pos + str(start) + str(end) + '.npy', np.array(darr))
     data = np.float32(np.load('Data/serial/' + pos + str(start) + str(end) + '.npy'))
     mean = np.mean(data, axis = 0)
@@ -83,4 +88,4 @@ def allDataParse(start, end, pos):
             for k in range(len(std[j])):
                 if std[j][k] > 1:
                     data[i][j][k] /= std[j][k]
-    return data, mean, std
+    return data, mean, std, open('Data/Names/' + pos, 'r').read().splitlines()

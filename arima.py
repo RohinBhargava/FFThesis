@@ -4,10 +4,8 @@ from sklearn.metrics import mean_squared_error
 from sklearn.cross_validation import train_test_split
 import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm
 
-
-
-
 tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+print (len(tup))
 raw = tup[0]
 
 total_loss = 0
@@ -34,6 +32,8 @@ for i in range(len(PARAMS)):
             preds.append(y_test_pred)
 
             if abs(y_test_pred - Y[h]) > 20:
+                print (tup[3][h])
+                print (X[j], tup[1][i][:8]/tup[2][i][:8])
                 plt.plot(X[j])
                 plt.show()
             h += 1
