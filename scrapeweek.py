@@ -10,11 +10,8 @@ driver = webdriver.Chrome('/home/legmonkey/Documents/FFThesis/chromedriver', des
 driver.get('https://www.pro-football-reference.com/boxscores')
 time.sleep(1)
 
-for i in range(2016, 2018):
-    start = 1
-    if i == 2016:
-        start = 10
-    for j in range(start, 18):
+for i in range(2016, 2017):
+    for j in range(7, 8):
         driver.find_element_by_xpath("//select[@name='year_id']/option[text()=" + str(i) + "]").click()
         time.sleep(1)
         driver.find_element_by_xpath("//select[@name='week']/option[text()='Week " + str(j) + "']").click()

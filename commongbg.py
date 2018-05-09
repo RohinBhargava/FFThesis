@@ -14,31 +14,43 @@ for pos in positions:
         year_dict = dict()
         names = open('Data/Names/' + pos)
         for name in names:
-            year_dict[name] = [0] +
+            year_dict[name] = [0] * (len(DEF_PARAMS) + len(PARAMS[pos]))
         pos_list.append(year_dict)
     running_average_position_year.append(pos_list)
 
 defense_stats_by_year = []
-for year in os.listdir('Data/Defense'):
-    defense = pd.read_csv('Data/Defense/' + year)
+for year in range(YEAR_ST, YEAR_END):
+    defense = pd.read_csv('Data/Defense/' + str(year) + '.csv')
     def_dict = dict()
     teams = defense['Tm']
     stats = defense[DEF_PARAMS]/17
     for tm in range(len(teams)):
-        def_dict[teams[tm]] = stats[tm]
+        def_dict[teams[tm]] = stats.ix[tm]
     defense_stats_by_year.append(def_dict)
 
-for year in os.listdir('Data/Game'):
-    year_han = int(year) - YEAR_ST
-    for week in os.listdir('Data/Game/' + year):
-        for game in os.listdir('Data/Game/' + year + '/' + week):
+for year in range(YEAR_ST, YEAR_END):
+    year_han = year - YEAR_ST
+    for week in range(1, 18):
+        for game in os.listdir('Data/Game/' + str(year) + '/' + str(week)):
+            print 'Data/Game/' + str(year) + '/' + str(week) + '/' + game
             teams = game.split('.csv')[0].split(' at ')
             abbr = map(lambda x : DICT_TEAM[x], teams)
-            stats = pd.read_csv(game)
-            names = stats['Player']
-            for name in names:
+            stats = pd.read_csv('Data/Game/' + str(year) + '/' + str(week) + '/' + game)
+            names = [i.split('\\')[1] for i in stats['Player']]
+            for name_i in range(len(names)):
                 for ind in range(len(running_average_position_year)):
-                    if name in i.split('\\')[1] in running_average_position_year[ind][year_han]:
-                        if len(running_average_position_year[ind][year_han][i]) == 0:
+                    if names[name_i] in running_average_position_year[ind][year_han]:
+                        row = stats[PARAMS[positions[ind]]].ix[name_i]
+                        for b in range(len(row)):
+                            if (type(row[b]) != str) and math.isnan(row[b]):
+                                row[b] = np.float32(0)
+                            elif type(row[b]) == int:
+                                row[b] = np.float32(row[b])
+                        running_average_position_year[ind][year_han][name] *= lambda_m
+                        running_average_position_year[ind][year_han][name] += (1 - lambda_m) * np.concatenate(row, defense_stats_by_year[year_han][teams[1 - abbr.index(stats['Tm'])]])
+                        running_average_position_year[ind][year_han][name] /= int(week)
+                        if week is '17' and year_han < YDIFF:
+                            running_average_position_year[ind][year_han + 1][name] = running_average_position_year[ind][year_han][name]
 
-                        else:
+for pos in running_average_position_year:
+    print (pos[YDIFF])
