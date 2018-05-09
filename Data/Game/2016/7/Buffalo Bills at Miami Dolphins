@@ -1,5 +1,4 @@
-,,Passing,Passing,Passing,Passing,Passing,Passing,Passing,Passing,Passing,Rushing,Rushing,Rushing,Rushing,Receiving,Receiving,Receiving,Receiving,Receiving,Fumbles,Fumbles
-Player,Tm,Cmp,Att,Yds,TD,Int,Sk,Yds,Lng,Rate,Att,Yds,TD,Lng,Tgt,Rec,Yds,TD,Lng,Fmb,FL
+Player,Tm,Cmp,Att,Yds,TD,Int,Sk,LYds,Lng,Rate,RAtt,RYds,RTD,Lng,Tgt,Rec,WYds,WTD,Lng,Fmb,FL
 Tyrod Taylor\TaylTy00,BUF,14,28,221,1,0,4,21,67,88.5,7,35,1,10,0,0,0,0,0,0,0
 Mike Gillislee\GillMi00,BUF,0,0,0,0,0,0,0,0,,5,20,0,20,0,0,0,0,0,0,0
 LeSean McCoy\McCoLe01,BUF,0,0,0,0,0,0,0,0,,8,11,0,4,0,0,0,0,0,0,0

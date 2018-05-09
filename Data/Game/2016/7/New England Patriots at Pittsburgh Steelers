@@ -1,5 +1,4 @@
-,,Passing,Passing,Passing,Passing,Passing,Passing,Passing,Passing,Passing,Rushing,Rushing,Rushing,Rushing,Receiving,Receiving,Receiving,Receiving,Receiving,Fumbles,Fumbles
-Player,Tm,Cmp,Att,Yds,TD,Int,Sk,Yds,Lng,Rate,Att,Yds,TD,Lng,Tgt,Rec,Yds,TD,Lng,Fmb,FL
+Player,Tm,Cmp,Att,Yds,TD,Int,Sk,LYds,Lng,Rate,RAtt,RYds,RTD,Lng,Tgt,Rec,WYds,WTD,Lng,Fmb,FL
 Tom Brady\BradTo00,NWE,19,26,222,2,0,0,0,37,124.2,5,13,0,5,0,0,0,0,0,0,0
 LeGarrette Blount\BlouLe00,NWE,0,0,0,0,0,0,0,0,,24,127,2,25,1,1,7,0,7,0,0
 Rob Gronkowski\GronRo00,NWE,0,0,0,0,0,0,0,0,,0,0,0,0,4,4,93,1,37,0,0
