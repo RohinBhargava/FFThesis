@@ -1,16 +1,15 @@
 from common import YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
-from sklearn.cross_validation import train_test_split
 import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm
 
-tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
-print (len(tup))
+pos = sys.argv[1]
+tup = allDataParse(YEAR_ST,YEAR_END, pos)
 raw = tup[0]
 
 total_loss = 0
 
-for i in range(len(PARAMS)):
+for i in range(len(PARAMS[pos])):
     # X_train, X_test, Y_train, Y_test = train_test_split(raw[:, :-1, i], raw[:, -1, i], test_size=0.3, random_state=1)
     X = raw[:, :-1, i]
     Y = raw[:, -1, i]
@@ -33,7 +32,7 @@ for i in range(len(PARAMS)):
 
             if abs(y_test_pred - Y[h]) > 20:
                 print (tup[3][h])
-                print (X[j], tup[1][i][:8]/tup[2][i][:8])
+                print (X[j], tup[1][:8, i]/tup[2][:8, i])
                 plt.plot(X[j])
                 plt.show()
             h += 1
@@ -41,9 +40,9 @@ for i in range(len(PARAMS)):
     loss = mean_squared_error(Y, np.array(preds))
     total_loss += loss
 
-    print (PARAMS[i], loss)
+    print (PARAMS[pos][i], loss, np.sqrt(loss * np.mean(tup[2][:, i]) + np.mean(tup[1][:, i])))
 
-print (total_loss/len(PARAMS))
+print (total_loss/len(PARAMS[pos]))
 
 # mse_arima = []
 # mse_arima_means = []
@@ -58,7 +57,7 @@ print (total_loss/len(PARAMS))
 # for i in raw:
 #     a = []
 #     b = []
-#     for j in range(len(PARAMS)):
+#     for j in range(len(PARAMS[pos])):
 #         with warnings.catch_warnings():
 #             warnings.filterwarnings("ignore")
 #             a.append(ARIMA(i[:-1, j], (0,1,0)).fit(disp=0).forecast()[0][0])
@@ -75,8 +74,8 @@ print (total_loss/len(PARAMS))
 
 # min_m = mse_arima_means.index(min(mse_arima_means))
 # print m[min_m]
-# print zip(PARAMS,mse_arima[min_m])
+# print zip(PARAMS[pos],mse_arima[min_m])
 # print mse_arima_means[min_m]
 
-# print zip(PARAMS, mse_a)
+# print zip(PARAMS[pos], mse_a)
 # print np.mean(mse_a)

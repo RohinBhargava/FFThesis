@@ -1,7 +1,7 @@
 import pandas as pd, numpy as np, math, random, os
 
 TEAM_DICT = {'ARI': 'Arizona Cardinals', 'ATL': 'Atlanta Falcons', 'BAL': 'Baltimore Ravens', 'BUF': 'Buffalo Bills', 'CAR': 'Carolina Panthers', 'CHI': 'Chicago Bears', 'CIN': 'Cincinnati Bengals', 'CLE': 'Cleveland Browns', 'DAL': 'Dallas Cowboys', 'DEN': 'Denver Broncos', 'DET': 'Detroit Lions', 'GNB': 'Green Bay Packers', 'HOU': 'Houston Texans', 'IND': 'Indianapolis Colts', 'JAX': 'Jacksonville Jaguars', 'KAN': 'Kansas City Chiefs', 'LAC': 'Los Angeles Chargers', 'LAR': 'Los Angeles Rams', 'MIA': 'Miami Dolphins', 'MIN': 'Minnesota Vikings', 'NOR': 'New Orleans Saints', 'NWE': 'New England Patriots', 'NYG': 'New York Giants', 'NYJ': 'New York Jets', 'OAK': 'Oakland Raiders', 'PHI': 'Philadelphia Eagles', 'PIT': 'Pittsburgh Steelers', 'SDG': 'San Diego Chargers', 'SEA': 'Seattle Seahawks', 'SFO': 'San Francisco 49ers', 'STL': 'St. Louis Rams', 'TAM': 'Tampa Bay Buccaneers', 'TEN': 'Tennessee Titans', 'WAS': 'Washington Redskins'}
-PARAMS = ['Cmp', 'Att', 'Yds', 'TD', 'Int', 'RAtt', 'RYds', 'Y/A', 'RTD', 'Tgt', 'Rec', 'WYds', 'Y/R', 'WTD', 'FantPt']
+PARAMS = {'QB' : ['Cmp', 'Att', 'Yds', 'TD', 'Int', 'RAtt', 'RYds', 'Y/A', 'RTD'], 'RB' : ['RAtt', 'RYds', 'Y/A', 'RTD', 'Tgt', 'Rec', 'WYds', 'Y/R', 'WTD'], 'WR' : ['RAtt', 'RYds', 'Y/A', 'RTD', 'Tgt', 'Rec', 'WYds', 'Y/R', 'WTD'], 'TE' : ['Tgt', 'Rec', 'WYds', 'Y/R', 'WTD']}
 YEAR_ST = 2010
 YEAR_END = 2018
 YDIFF = YEAR_END - YEAR_ST - 1
@@ -37,15 +37,15 @@ YDIFF = YEAR_END - YEAR_ST - 1
 def parsePl(year, tsd, n, pos):
     y = pd.read_csv('Data/' + str(year) + '.csv')
     ycodes = [i.split('\\')[1] for i in y['Name']]
-    table = y[PARAMS]
+    table = y[PARAMS[pos]]
     # ranks = rank(year)
     for i in range(len(ycodes)):
         if y['FantPos'][i] == pos:
             player = ycodes[i]
             if player not in tsd:
                 tsd[player] = []
-                while len(tsd[player]) < n - 1:
-                    tsd[player].append([0] * len(PARAMS))
+                # while len(tsd[player]) < n - 1:
+                #     tsd[player].append([0] * len(PARAMS[pos]))
             row = table.ix[i]
             for b in range(len(row)):
                 if (type(row[b]) != str) and math.isnan(row[b]):
@@ -57,10 +57,11 @@ def parsePl(year, tsd, n, pos):
             #     row[0] = 32 - ranks.index(TEAM_DICT[table['Tm'][i]])
             # else:
             #     row[0] = 32/int(table['Tm'][i][0])
-            tsd[player].append(row)
+            while len(tsd[player]) < n:
+                tsd[player].append(row)
     for i in tsd:
         if len(tsd[i]) == n - 1:
-            tsd[i].append([0] * len(PARAMS))
+            tsd[i].append([0] * len(PARAMS[pos]))
         # elif len(tsd[i]) < n - 1:
         #     del tsd[i]
     return tsd

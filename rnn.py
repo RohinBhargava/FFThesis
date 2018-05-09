@@ -1,15 +1,15 @@
 # https://jasdeep06.github.io/posts/Understanding-LSTM-in-Tensorflow-MNIST/
 from common import YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np
 from sklearn.metrics import mean_squared_error
-from sklearn.cross_validation import train_test_split
 from tensorflow.contrib import rnn
 import warnings, tensorflow as tf, sys
 
-tup = allDataParse(YEAR_ST,YEAR_END, sys.argv[1])
+pos = sys.argv[1]
+tup = allDataParse(YEAR_ST,YEAR_END, pos)
 raw = tup[0]
 
 total_loss = 0
-for i in range(len(PARAMS)):
+for i in range(len(PARAMS[pos])):
     X_train = raw[:, :-2, i]
     X_test = raw[:, 1:-1, i]
     Y_train = raw[:, -2, i]
@@ -39,7 +39,7 @@ for i in range(len(PARAMS)):
 
     y = RNN(x, W_out, b_out)
     cost = tf.losses.mean_squared_error(y_, y)
-    train_step = tf.train.RMSPropOptimizer(0.1).minimize(cost)
+    train_step = tf.train.AdamOptimizer(0.02).minimize(cost)
 
     sess.run(tf.global_variables_initializer())
 
@@ -49,7 +49,8 @@ for i in range(len(PARAMS)):
         accuracy = tf.losses.mean_squared_error(y_, y)
         accuracyl.append(accuracy.eval(feed_dict={x: X_test.reshape(len(X_test), YDIFF - 1, 1), y_: Y_test.reshape(len(Y_test), 1)}))
 
+    sess.close()
     loss = min(accuracyl)
     total_loss += loss
-    print (PARAMS[i], loss)
-print (total_loss/len(PARAMS))
+    print (PARAMS[pos][i], loss, np.sqrt(loss * np.mean(tup[2][:, i]) + np.mean(tup[1][:, i])))
+print (total_loss/len(PARAMS[pos]))
