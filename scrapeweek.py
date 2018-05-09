@@ -6,12 +6,12 @@ import time, os
 
 caps = DesiredCapabilities().CHROME
 caps["pageLoadStrategy"] = "none"
-driver = webdriver.Chrome('/home/legmonkey/Documents/FFThesis/chromedriver', desired_capabilities=caps)
+driver = webdriver.Chrome(os.getcwd() + '/' + 'chromedriver', desired_capabilities=caps)
 driver.get('https://www.pro-football-reference.com/boxscores')
 time.sleep(1)
 
-for i in range(2016, 2017):
-    for j in range(7, 8):
+for i in range(2010, 2018):
+    for j in range(1, 18):
         driver.find_element_by_xpath("//select[@name='year_id']/option[text()=" + str(i) + "]").click()
         time.sleep(1)
         driver.find_element_by_xpath("//select[@name='week']/option[text()='Week " + str(j) + "']").click()
@@ -38,7 +38,7 @@ for i in range(2016, 2017):
                     except:
                         print ("stuck")
                         driver.refresh()
-                filename = 'Data/gamebygame/' + str(i) + '/' + str(j) + '/' + name
+                filename = 'Data/Game/' + str(i) + '/' + str(j) + '/' + name
                 if not os.path.exists(os.path.dirname(filename)):
                     try:
                         os.makedirs(os.path.dirname(filename))
