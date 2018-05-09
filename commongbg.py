@@ -1,4 +1,4 @@
-from common import TEAM_DICT, YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np, pd, os
+from common import TEAM_DICT, YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np, pd, os, math
 
 DICT_TEAM = {v : k for k, v in TEAM_DICT.items()}
 DEF_PARAMS = ['PF','TYds','Ply','Y/P','TO','FL','1stD','Cmp','Att','Yds','TD','Int','NY/A','1stD','RAtt','RYds','RTD','Y/A','1stD','Pen','PYds','1stPy','Sc%','TO%']
@@ -6,15 +6,16 @@ DEF_PARAMS = ['PF','TYds','Ply','Y/P','TO','FL','1stD','Cmp','Att','Yds','TD','I
 positions = ['QB', 'RB', 'WR', 'TE']
 running_average_position_year = []
 season_totals_by_pos_year = []
+lambda_m = 0.1
 
 for pos in positions:
     season_totals_by_pos_year.append(np.float32(np.load('Data/serial/' + pos + str(YEAR_ST) + str(YEAR_END) + '.npy')))
     pos_list = []
-    for year in range(YDIFF):
+    for year in range(YDIFF + 1):
         year_dict = dict()
         names = open('Data/Names/' + pos)
         for name in names:
-            year_dict[name] = [0] * (len(DEF_PARAMS) + len(PARAMS[pos]))
+            year_dict[name.strip()] = np.array([0.0] * (len(DEF_PARAMS) + len(PARAMS[pos])))
         pos_list.append(year_dict)
     running_average_position_year.append(pos_list)
 
@@ -38,8 +39,9 @@ for year in range(YEAR_ST, YEAR_END):
             stats = pd.read_csv('Data/Game/' + str(year) + '/' + str(week) + '/' + game)
             names = [i.split('\\')[1] for i in stats['Player']]
             for name_i in range(len(names)):
+                name = names[name_i]
                 for ind in range(len(running_average_position_year)):
-                    if names[name_i] in running_average_position_year[ind][year_han]:
+                    if name in running_average_position_year[ind][year_han]:
                         row = stats[PARAMS[positions[ind]]].ix[name_i]
                         for b in range(len(row)):
                             if (type(row[b]) != str) and math.isnan(row[b]):
@@ -47,7 +49,7 @@ for year in range(YEAR_ST, YEAR_END):
                             elif type(row[b]) == int:
                                 row[b] = np.float32(row[b])
                         running_average_position_year[ind][year_han][name] *= lambda_m
-                        running_average_position_year[ind][year_han][name] += (1 - lambda_m) * np.concatenate(row, defense_stats_by_year[year_han][teams[1 - abbr.index(stats['Tm'])]])
+                        running_average_position_year[ind][year_han][name] += (1 - lambda_m) * np.concatenate([np.array(row), -1 * np.array(defense_stats_by_year[year_han][teams[1 - abbr.index(stats['Tm'].ix[name_i])]])])
                         running_average_position_year[ind][year_han][name] /= int(week)
                         if week is '17' and year_han < YDIFF:
                             running_average_position_year[ind][year_han + 1][name] = running_average_position_year[ind][year_han][name]

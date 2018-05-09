@@ -1,7 +1,7 @@
 import pandas as pd, numpy as np, math, random, os
 
 TEAM_DICT = {'ARI': 'Arizona Cardinals', 'ATL': 'Atlanta Falcons', 'BAL': 'Baltimore Ravens', 'BUF': 'Buffalo Bills', 'CAR': 'Carolina Panthers', 'CHI': 'Chicago Bears', 'CIN': 'Cincinnati Bengals', 'CLE': 'Cleveland Browns', 'DAL': 'Dallas Cowboys', 'DEN': 'Denver Broncos', 'DET': 'Detroit Lions', 'GNB': 'Green Bay Packers', 'HOU': 'Houston Texans', 'IND': 'Indianapolis Colts', 'JAX': 'Jacksonville Jaguars', 'KAN': 'Kansas City Chiefs', 'LAC': 'Los Angeles Chargers', 'LAR': 'Los Angeles Rams', 'MIA': 'Miami Dolphins', 'MIN': 'Minnesota Vikings', 'NOR': 'New Orleans Saints', 'NWE': 'New England Patriots', 'NYG': 'New York Giants', 'NYJ': 'New York Jets', 'OAK': 'Oakland Raiders', 'PHI': 'Philadelphia Eagles', 'PIT': 'Pittsburgh Steelers', 'SDG': 'San Diego Chargers', 'SEA': 'Seattle Seahawks', 'SFO': 'San Francisco 49ers', 'STL': 'St. Louis Rams', 'TAM': 'Tampa Bay Buccaneers', 'TEN': 'Tennessee Titans', 'WAS': 'Washington Redskins'}
-PARAMS = {'QB' : ['Cmp', 'Att', 'Yds', 'TD', 'Int', 'RAtt', 'RYds', 'Y/A', 'RTD'], 'RB' : ['RAtt', 'RYds', 'Y/A', 'RTD', 'Tgt', 'Rec', 'WYds', 'Y/R', 'WTD'], 'WR' : ['RAtt', 'RYds', 'Y/A', 'RTD', 'Tgt', 'Rec', 'WYds', 'Y/R', 'WTD'], 'TE' : ['Tgt', 'Rec', 'WYds', 'Y/R', 'WTD']}
+PARAMS = {'QB' : ['Cmp', 'Att', 'Yds', 'TD', 'Int', 'RAtt', 'RYds', 'RTD'], 'RB' : ['RAtt', 'RYds', 'RTD', 'Tgt', 'Rec', 'WYds', 'WTD'], 'WR' : ['RAtt', 'RYds', 'RTD', 'Tgt', 'Rec', 'WYds',  'WTD'], 'TE' : ['Tgt', 'Rec', 'WYds', 'WTD']}
 YEAR_ST = 2010
 YEAR_END = 2018
 YDIFF = YEAR_END - YEAR_ST - 1
