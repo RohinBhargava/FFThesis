@@ -67,15 +67,17 @@ def parsePl(year, tsd, n, pos):
     return tsd
 
 def allDataParse(start, end, pos):
-    if not os.path.exists('Data/serial/' + pos + str(start) + str(end) + '.npy'):
+    if not os.path.exists('Data/serial/Games' + pos + str(start) + str(end) + '.npy'):
         tsd = dict()
         for i in range(start, end):
             tsd = parsePl(i, tsd, i - start + 1, pos)
         darr = []
+        keys = []
         for i in tsd:
             darr.append(tsd[i])
+            keys.append(i)
         name = open('Data/Names/' + pos, 'w')
-        for na in tsd.keys():
+        for na in keys:
             name.write(na + '\n')
         name.flush()
         name.close()

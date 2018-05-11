@@ -4,8 +4,7 @@ from sklearn.metrics import mean_squared_error
 import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm
 
 pos = sys.argv[1]
-tup = allDataParse(YEAR_ST,YEAR_END, pos)
-raw = tup[0]
+raw, mean, std, names = allDataParse(YEAR_ST,YEAR_END, pos)
 
 total_loss = 0
 
@@ -40,7 +39,7 @@ for i in range(len(PARAMS[pos])):
     loss = mean_squared_error(Y, np.array(preds))
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.sqrt(loss * np.mean(tup[2][:, i]) + np.mean(tup[1][:, i])))
+    print (PARAMS[pos][i], loss, np.sqrt(loss * std[-1, i] + mean[-1, i]))
 
 print (total_loss/len(PARAMS[pos]))
 
