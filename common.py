@@ -89,6 +89,6 @@ def allDataParse(start, end, pos):
         data[i] -= mean
         for j in range(len(std)):
             for k in range(len(std[j])):
-                if std[j][k] > 1:
-                    data[i][j][k] /= std[j][k]
+                if std[j, k] > 1:
+                    data[i, j, k] /= std[j, k]
     return data, mean, std, open('Data/Names/' + pos, 'r').read().splitlines()
