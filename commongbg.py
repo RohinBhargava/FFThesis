@@ -3,6 +3,8 @@ import pdb
 
 DICT_TEAM = {v : k for k, v in TEAM_DICT.items()}
 DEF_PARAMS = ['PF','TYds','Ply','Y/P','TO','FL','1stD','Cmp','Att','Yds','TD','Int','NY/A','1stD','RAtt','RYds','RTD','Y/A','1stD','Pen','PYds','1stPy','Sc%','TO%']
+WEEK_ST = 1
+WEEK_END = 17
 
 positions = ['QB', 'RB', 'WR', 'TE']
 
@@ -29,14 +31,14 @@ def generate(start, end, names_l, lambda_m):
         defense = pd.read_csv('Data/Defense/' + str(year) + '.csv')
         def_dict = dict()
         teams = defense['Tm']
-        stats = defense[DEF_PARAMS]/17
+        stats = defense[DEF_PARAMS]/WEEK_END
         for tm in range(len(teams)):
             def_dict[teams[tm]] = stats.ix[tm]
         defense_stats_by_year.append(def_dict)
 
     for year in range(start, end):
         year_han = year - start
-        for week in range(1, 18):
+        for week in range(WEEK_ST, WEEK_END + 1):
             for game in os.listdir('Data/Game/' + str(year) + '/' + str(week)):
                 print ('Data/Game/' + str(year) + '/' + str(week) + '/' + game)
                 teams = game.split('.csv')[0].split(' at ')
@@ -54,15 +56,15 @@ def generate(start, end, names_l, lambda_m):
                                     row[b] = np.float32(0)
                                 elif type(row[b]) == int:
                                     row[b] = np.float32(row[b])
-                            concatrow = np.concatenate([np.array(row), -1 * np.array(defense_stats_by_year[year_han][teams[1 - abbr.index(stats['Tm'].ix[name_i])]])])
-                            if week == 1:
+                            concatrow = np.concatenate([np.array(row), - 1 * np.array(defense_stats_by_year[year_han][teams[1 - abbr.index(stats['Tm'].ix[name_i])]])])
+                            if week == WEEK_ST:
                                 st = np.array([0.0] * (len(DEF_PARAMS) + len(PARAMS[pos])))
                                 if year != start:
                                     st = running_average_position_year[ind][year_han - 1][name][-1]
                                 running_average_position_year[ind][year_han][name].append(st)
                             old = running_average_position_year[ind][year_han][name][-1]
                             new = (lambda_m * old * len(old) + (1 - lambda_m) * concatrow)/(1 + len(old))
-                            if week != 17:
+                            if week != WEEK_END:
                                 running_average_position_year[ind][year_han][name].append(new)
                             actuals[ind][year_han][name].append(row)
 
@@ -72,14 +74,14 @@ def generate(start, end, names_l, lambda_m):
                         pos = positions[ind]
                         row = np.array([0.0] * len(PARAMS[pos]))
                         concatrow = np.array([0.0] * (len(DEF_PARAMS) + len(PARAMS[pos])))
-                        if week == 1:
+                        if week == WEEK_ST:
                             st = np.array([0.0] * (len(DEF_PARAMS) + len(PARAMS[pos])))
                             if year != start:
                                 st = running_average_position_year[ind][year_han - 1][name][-1]
                             running_average_position_year[ind][year_han][name].append(st)
                         old = running_average_position_year[ind][year_han][name][-1]
                         new = (lambda_m * old * len(old) + (1 - lambda_m) * concatrow)/(1 + len(old))
-                        if week != 17:
+                        if week != WEEK_END:
                             running_average_position_year[ind][year_han][name].append(new)
                         actuals[ind][year_han][name].append(row)
 
@@ -94,8 +96,8 @@ def allDataParse(start, end, pos, lambda_m=0.1):
         array_han = []
         actual_han = []
         for pos_i in positions:
-            pos_arr = np.zeros((len(names[pos_i]), end - start, 17, len(DEF_PARAMS) + len(PARAMS[pos])))
-            actual_arr = np.zeros((len(names[pos_i]), end - start, 17, len(PARAMS[pos])))
+            pos_arr = np.zeros((len(names[pos_i]), end - start, WEEK_END, len(DEF_PARAMS) + len(PARAMS[pos])))
+            actual_arr = np.zeros((len(names[pos_i]), end - start, WEEK_END, len(PARAMS[pos])))
             pos_name = names[pos_i]
             for na in range(len(pos_name)):
                 pl_na = pos_name[na]
@@ -128,11 +130,11 @@ def allDataParse(start, end, pos, lambda_m=0.1):
         for j in range(len(std)):
             for k in range(len(std[j])):
                 for l in range(len(std[j, k])):
-                    if std[j, k, l] > 1:
+                    if std[j, k, l] != 0:
                         data[i, j, k, l] /= std[j, k, l]
         for j in range(len(std_acc)):
             for k in range(len(std_acc[j])):
                 for l in range(len(std_acc[j, k])):
-                    if std_acc[j, k, l] > 1:
+                    if std_acc[j, k, l] != 0:
                         actuals[i, j, k, l] /= std_acc[j, k, l]
     return data, mean, std, actuals, mean_acc, std_acc, names[pos]

@@ -51,6 +51,6 @@ for i in range(len(PARAMS[pos])):
     sess.close()
     loss = min(accuracyl)
     total_loss += loss
-    print (PARAMS[pos][i], loss, np.sqrt(loss * std[-1, i] + mean[-1, i]))
+    print (PARAMS[pos][i], loss, np.sqrt(loss) * std[-1, i])
 
 print (total_loss/len(PARAMS[pos]))

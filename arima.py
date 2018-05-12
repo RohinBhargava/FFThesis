@@ -12,14 +12,27 @@ for i in range(len(PARAMS[pos])):
     # X_train, X_test, Y_train, Y_test = train_test_split(raw[:, :-1, i], raw[:, -1, i], test_size=0.3, random_state=1)
     X = raw[:, :-1, i]
     Y = raw[:, -1, i]
+    realY = []
     preds = []
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
         h = 0
         for j in range(len(X)):
+
+            k = 0
+            while k < YDIFF and (X[j, k] == 0 or (std[k, i] != 0 and X[j, k] == -mean[k, i]/std[k, i])):
+                k += 1
+
+            time = X[j][k:]
+
+            if len(time) >= 5:
+                realY.append(Y[j])
+            else:
+                continue
+
             # arima = ARIMA(X[j], (1, 1, 2))
-            arima = sm.tsa.statespace.SARIMAX(X[j], order=(1,1,1), enforce_stationarity=False, enforce_invertibility=False)
+            arima = sm.tsa.statespace.SARIMAX(time, order=(1,1,1), enforce_stationarity=False, enforce_invertibility=False)
 
             fit = arima.fit(disp=False)
             # print fit.summary()
@@ -29,17 +42,10 @@ for i in range(len(PARAMS[pos])):
 
             preds.append(y_test_pred)
 
-            if abs(y_test_pred - Y[h]) > 20:
-                print (tup[3][h])
-                print (X[j], tup[1][:8, i]/tup[2][:8, i])
-                plt.plot(X[j])
-                plt.show()
-            h += 1
-
-    loss = mean_squared_error(Y, np.array(preds))
+    loss = mean_squared_error(np.array(realY), np.array(preds))
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.sqrt(loss * std[-1, i] + mean[-1, i]))
+    print (PARAMS[pos][i], loss, np.sqrt(loss) * std[-1, i], "No. Skipped: " + str(len(Y) - len(realY)))
 
 print (total_loss/len(PARAMS[pos]))
 

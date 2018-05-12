@@ -83,12 +83,12 @@ def allDataParse(start, end, pos):
         name.close()
         np.save('Data/serial/' + pos + str(start) + str(end) + '.npy', np.array(darr))
     data = np.float32(np.load('Data/serial/' + pos + str(start) + str(end) + '.npy'))
-    mean = np.mean(data, axis = 0)
-    std = np.std(data, axis = 0)
+    mean = np.mean(data, axis=0)
+    std = np.std(data, axis=0)
     for i in range(len(data)):
         data[i] -= mean
         for j in range(len(std)):
             for k in range(len(std[j])):
-                if std[j, k] > 1:
+                if std[j, k] != 0:
                     data[i, j, k] /= std[j, k]
     return data, mean, std, open('Data/Names/' + pos, 'r').read().splitlines()
