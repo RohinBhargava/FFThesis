@@ -118,7 +118,6 @@ def allDataParse(start, end, pos, lambda_m=0.1):
             np.save('Data/serial/Games/Actuals/' + positions[pos_i] + str(start) + str(end) + '.npy', actual_han[pos_i])
     data = np.load('Data/serial/Games/' + pos + str(start) + str(end) + str(lambda_m) + '.npy')
     actuals = np.load('Data/serial/Games/Actuals/' + pos + str(start) + str(end) + '.npy')
-    print(data.shape, actuals.shape)
     mean = np.mean(data, axis = 0)
     mean_acc = np.mean(actuals, axis = 0)
     std = np.std(data, axis = 0)
