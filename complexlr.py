@@ -28,6 +28,6 @@ for i in range(len(PARAMS[pos])):
 
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.mean(np.sum(abs(pred - test), axis=1)), np.sum(test[12]), np.sum(pred[12]))
+    print (PARAMS[pos][i], loss, np.mean(np.sum(abs(pred - test), axis=1)), np.sum(test[5]), np.sum(pred[5]))
 
 print (total_loss/len(PARAMS[pos]))

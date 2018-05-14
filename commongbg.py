@@ -12,6 +12,7 @@ def generate(start, end, names_l, lambda_m):
     running_average_position_year = []
     actuals = []
     old_ptrs_pos = []
+    namgam_years_pos = []
     for pos in positions:
         # data_len = len(DEF_PARAMS) + len(PARAMS[pos])
         data_len = len(PARAMS[pos])
@@ -19,10 +20,14 @@ def generate(start, end, names_l, lambda_m):
         pos_list = []
         actuals_list = []
         old_ptrs_year = []
-        for year in range(end - start):
+        namgam_year = []
+        for year in range(start, end):
             year_dict = dict()
             actuals_dict = dict()
             old_ptrs_dict = dict()
+            ft = open('Data/Names/Games/' + pos + str(year), 'r')
+            namgam = eval(ft.read())
+            ft.close()
             for name in names_l[pos]:
                 # year_dict[name.strip()] = np.array([0.0] * data_len)
                 year_dict[name.strip()] = []
@@ -31,87 +36,109 @@ def generate(start, end, names_l, lambda_m):
             pos_list.append(year_dict)
             actuals_list.append(actuals_dict)
             old_ptrs_year.append(old_ptrs_dict)
+            namgam_year.append(namgam)
         running_average_position_year.append(pos_list)
         actuals.append(actuals_list)
         old_ptrs_pos.append(old_ptrs_year)
+        namgam_years_pos.append(namgam_year)
 
-    defense_stats_by_year = []
-    for year in range(start, end):
-        defense = pd.read_csv('Data/Defense/' + str(year) + '.csv')
-        def_dict = dict()
-        teams = defense['Tm']
-        stats = defense[DEF_PARAMS]/WEEK_END
-        for tm in range(len(teams)):
-            def_dict[teams[tm]] = stats.ix[tm]
-        defense_stats_by_year.append(def_dict)
+    # defense_stats_by_year = []
+    # for year in range(start, end):
+    #     defense = pd.read_csv('Data/Defense/' + str(year) + '.csv')
+    #     def_dict = dict()
+    #     teams = defense['Tm']
+    #     stats = defense[DEF_PARAMS]/WEEK_END
+    #     for tm in range(len(teams)):
+    #         def_dict[teams[tm]] = stats.ix[tm]
+    #     defense_stats_by_year.append(def_dict)
 
     for year in range(start, end):
         year_han = year - start
+        mult_team = set()
         for week in range(WEEK_ST, WEEK_END + 1):
             tms = set()
+            players = set()
+            # print ('Data/Game/' + str(year) + '/' + str(week))
             for game in os.listdir('Data/Game/' + str(year) + '/' + str(week)):
                 print ('Data/Game/' + str(year) + '/' + str(week) + '/' + game)
                 teams = game.split('.csv')[0].split(' at ')
-                abbr = list(map(lambda x : DICT_TEAM[x], teams))
+                # abbr = list(map(lambda x : DICT_TEAM[x], teams))
                 stats = pd.read_csv('Data/Game/' + str(year) + '/' + str(week) + '/' + game)
                 names = [i.split('\\')[1] for i in stats['Player']]
                 for name_i in range(len(names)):
                     name = names[name_i]
                     for ind in range(len(running_average_position_year)):
+                        pos = positions[ind]
+                        # data_len = len(DEF_PARAMS) + len(PARAMS[pos])
+                        data_len = len(PARAMS[pos])
+                        acc_len = len(PARAMS[pos])
                         if name in running_average_position_year[ind][year_han]:
-                            pos = positions[ind]
-                            # data_len = len(DEF_PARAMS) + len(PARAMS[pos])
-                            data_len = len(PARAMS[pos])
-                            acc_len = len(PARAMS[pos])
-                            namgam = open()
-                            row = stats[PARAMS[positions[ind]]].ix[name_i]
                             mv = running_average_position_year[ind][year_han][name]
+                            row = stats[PARAMS[positions[ind]]].ix[name_i]
                             for b in range(len(row)):
                                 if (type(row[b]) != str) and math.isnan(row[b]):
                                     row[b] = np.float32(0)
                                 elif type(row[b]) == int:
                                     row[b] = np.float32(row[b])
-                            tm = abbr.index(stats['Tm'].ix[name_i])
+                            tm = stats['Tm'].ix[name_i]
                             tms.add(tm)
-                            # concatrow = np.concatenate([np.array(row), -1 * np.array(defense_stats_by_year[year_han - 1][teams[1 - tm]])])
+                            # concatrow = np.concatenate([np.array(row), -1 * np.array(defense_stats_by_year[year_han - 1][teams[1 - abbr.index(tm)]])])
                             concatrow = np.array(row)
                             if week == WEEK_ST:
-                                # st = np.array([0.0] * data_len)
+                                st = np.array([0.0] * data_len)
                                 # if year != start:
                                 #     st = running_average_position_year[ind][year_han - 1][name][-1]
-                                st = np.load('Data/serial/' + pos + str(start) + str(end) + '.npy')[name_i]
-                                pdb.set_trace()
+                                if year != start:
+                                    gameno = WEEK_END - WEEK_ST
+                                    for m_i in reversed(range(max(0, year_han - 1))):
+                                        if name in namgam_years_pos[ind][m_i]:
+                                            gameno = np.float32(namgam_years_pos[ind][m_i][name][0])
+                                            break
+                                    st = np.load('Data/serial/' + pos + str(start) + str(end) + '.npy')[names_l[pos].index(name)][year_han - 1]/gameno
+                                    # st = running_average_position_year[ind][year_han - 1][name][-1] * np.float32(WEEK_END - WEEK_ST)/gameno
                                 mv.append(st)
+                                old_ptrs_pos[ind][year_han][name] = st
                             old = old_ptrs_pos[ind][year_han][name]
                             new = lambda_m * old + (1 - lambda_m) * concatrow
-                            if week != WEEK_END:
+                            if len(mv) < WEEK_END - WEEK_ST:
                                 mv.append(new)
                                 old_ptrs_pos[ind][year_han][name] = new
-                            actuals[ind][year_han][name].append(np.array(row))
+                            if len(actuals[ind][year_han][name]) < WEEK_END - WEEK_ST:
+                                actuals[ind][year_han][name].append(np.array(row))
+                            players.add(name)
 
             for ind in range(len(running_average_position_year)):
+                pos = positions[ind]
+                # data_len = len(DEF_PARAMS) + len(PARAMS[pos])
+                data_len = len(PARAMS[pos])
+                acc_len = len(PARAMS[pos])
                 for name in running_average_position_year[ind][year_han]:
                     mv = running_average_position_year[ind][year_han][name]
-                    if len(mv) <= week:
-                        pos = positions[ind]
-                        # data_len = len(DEF_PARAMS) + len(PARAMS[pos])
-                        data_len = len(PARAMS[pos])
-                        acc_len = len(PARAMS[pos])
+                    if name not in players and (name not in namgam_years_pos[ind][year_han] or namgam_years_pos[ind][year_han][name][1] in tms or 'TM' in namgam_years_pos[ind][year_han][name][1]):
+                        if (name not in namgam_years_pos[ind][year_han] or (name in namgam_years_pos[ind][year_han] and 'TM' in namgam_years_pos[ind][year_han][name][1])) and name not in mult_team:
+                            mult_team.add(name)
+                            continue
                         row = np.array([0.0] * acc_len)
                         concatrow = np.array([0.0] * data_len)
                         if week == WEEK_ST:
                             st = np.array([0.0] * data_len)
                             if year != start:
-                                st = running_average_position_year[ind][year_han - 1][name][-1]
+                                # st = running_average_position_year[ind][year_han - 1][name][-1]
+                                gameno = WEEK_END - WEEK_ST
+                                for m_i in reversed(range(max(0, year_han - 1))):
+                                    if name in namgam_years_pos[ind][m_i]:
+                                        gameno = np.float32(namgam_years_pos[ind][m_i][name][0])
+                                        break
+                                    st = np.load('Data/serial/' + pos + str(start) + str(end) + '.npy')[names_l[pos].index(name)][year_han - 1]/gameno
                             mv.append(st)
+                            old_ptrs_pos[ind][year_han][name] = st
                         old = old_ptrs_pos[ind][year_han][name]
-                        new = concatrow
-                        if tm in tms:
-                            new = lambda_m * old + (1 - lambda_m) * concatrow
+                        new = lambda_m * old + (1 - lambda_m) * concatrow
+                        if len(mv) < WEEK_END - WEEK_ST:
+                            mv.append(new)
                             old_ptrs_pos[ind][year_han][name] = new
-                            if week != WEEK_END:
-                                mv.append(new)
-                            actuals[ind][year_han][name].append(np.array(row))
+                        if len(actuals[ind][year_han][name]) < WEEK_END - WEEK_ST:
+                            actuals[ind][year_han][name].append(row)
 
     return running_average_position_year, actuals
 
@@ -127,8 +154,8 @@ def allDataParse(start, end, pos, lambda_m=0.1):
             # data_len = len(DEF_PARAMS) + len(PARAMS[pos])
             data_len = len(PARAMS[pos_i])
             acc_len = len(PARAMS[pos_i])
-            pos_arr = np.zeros((len(names[pos_i]), end - start, WEEK_END, data_len))
-            actual_arr = np.zeros((len(names[pos_i]), end - start, WEEK_END, acc_len))
+            pos_arr = np.zeros((len(names[pos_i]), end - start, WEEK_END - WEEK_ST, data_len))
+            actual_arr = np.zeros((len(names[pos_i]), end - start, WEEK_END - WEEK_ST, acc_len))
             pos_name = names[pos_i]
             for na in range(len(pos_name)):
                 pl_na = pos_name[na]

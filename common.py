@@ -38,13 +38,13 @@ def parsePl(year, tsd, n, pos):
     y = pd.read_csv('Data/' + str(year) + '.csv')
     ycodes = [i.split('\\')[1] for i in y['Name']]
     table = y[PARAMS[pos]]
-    games = y['G']
+    games = y[['G', 'Tm']]
     namgam = dict()
     # ranks = rank(year)
     for i in range(len(ycodes)):
         if y['FantPos'][i] == pos:
             player = ycodes[i]
-            namgam[player] = np.float32(games.ix[i])
+            namgam[player] = (np.float32(games.ix[i][0]), games.ix[i][1])
             if player not in tsd:
                 tsd[player] = []
                 # while len(tsd[player]) < n - 1:
