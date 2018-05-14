@@ -3,8 +3,8 @@ from common import YEAR_ST, YEAR_END, PARAMS, np
 from sklearn.metrics import mean_squared_error
 
 pos = sys.argv[1]
-raw, _, _, acs, _, _, _ = commongbg.allDataParse(YEAR_ST,YEAR_END, pos)
-seasons, mean, std, names = common.allDataParse(YEAR_ST,YEAR_END, pos)
+seasons, smean, sstd, names = common.allDataParse(YEAR_ST,YEAR_END, pos)
+raw, mean, std, acs, mean_acc, std_acc, _ = commongbg.allDataParse(YEAR_ST,YEAR_END, pos)
 nopl, years, weeks, stats = raw.shape
 
 total_loss = 0
@@ -21,11 +21,13 @@ for i in range(len(PARAMS[pos])):
     lr.fit(X_train, Y_train)
     y_test_pred = lr.predict(X_test)
 
-    loss = mean_squared_error(np.mean(Y_test.reshape(nopl, weeks), axis=1), np.mean(y_test_pred.reshape(nopl, weeks), axis=1))
+    test = Y_test.reshape(nopl, weeks) * std_acc[-1, :, i] + mean_acc[-1, :, i]
+    pred = y_test_pred.reshape(nopl, weeks) * std[-1, :, i] + mean[-1, :, i]
+
+    loss = mean_squared_error((np.sum(test, axis=1) - smean[-1, i])/sstd[-1, i], (np.sum(pred, axis=1) - smean[-1, i])/sstd[-1, i])
 
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.sqrt(loss) * std[-1, i])
-
+    print (PARAMS[pos][i], loss, np.mean(np.sum(abs(pred - test), axis=1)), np.sum(test[12]), np.sum(pred[12]))
 
 print (total_loss/len(PARAMS[pos]))

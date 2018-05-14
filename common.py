@@ -38,10 +38,13 @@ def parsePl(year, tsd, n, pos):
     y = pd.read_csv('Data/' + str(year) + '.csv')
     ycodes = [i.split('\\')[1] for i in y['Name']]
     table = y[PARAMS[pos]]
+    games = y['G']
+    namgam = dict()
     # ranks = rank(year)
     for i in range(len(ycodes)):
         if y['FantPos'][i] == pos:
             player = ycodes[i]
+            namgam[player] = np.float32(games.ix[i])
             if player not in tsd:
                 tsd[player] = []
                 # while len(tsd[player]) < n - 1:
@@ -64,19 +67,24 @@ def parsePl(year, tsd, n, pos):
             tsd[i].append([0] * len(PARAMS[pos]))
         # elif len(tsd[i]) < n - 1:
         #     del tsd[i]
-    return tsd
+    return tsd, namgam
 
 def allDataParse(start, end, pos):
     if not os.path.exists('Data/serial/Games' + pos + str(start) + str(end) + '.npy'):
         tsd = dict()
+        namgam = None
         for i in range(start, end):
-            tsd = parsePl(i, tsd, i - start + 1, pos)
+            tsd, namgam = parsePl(i, tsd, i - start + 1, pos)
+            namgamfh = open('Data/Names/Games/' + pos + str(i), 'w')
+            namgamfh.write(str(namgam))
+            namgamfh.flush()
+            namgamfh.close()
         darr = []
         keys = []
         for i in tsd:
             darr.append(tsd[i])
             keys.append(i)
-        name = open('Data/Names/' + pos, 'w')
+        name = open('Data/Names/' + pos + str(start) + str(end), 'w')
         for na in keys:
             name.write(na + '\n')
         name.flush()
@@ -91,4 +99,4 @@ def allDataParse(start, end, pos):
             for k in range(len(std[j])):
                 if std[j, k] != 0:
                     data[i, j, k] /= std[j, k]
-    return data, mean, std, open('Data/Names/' + pos, 'r').read().splitlines()
+    return data, mean, std, open('Data/Names/' + pos + str(start) + str(end), 'r').read().splitlines()

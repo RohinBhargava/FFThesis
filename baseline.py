@@ -22,7 +22,7 @@ for i in range(len(PARAMS[pos])):
 
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.sqrt(loss) * std[-1, i])
+    print (PARAMS[pos][i], loss, Y_test[98] * std[-1, i] + mean[-1, i], y_test_pred[98] * std[-1, i] + mean[-1, i] )
 
 
 print (total_loss/len(PARAMS[pos]))
