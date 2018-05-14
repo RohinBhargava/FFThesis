@@ -16,7 +16,7 @@ for i in range(len(PARAMS[pos])):
     Y_train = acs[:, -2, :, i].reshape(nopl * weeks,)
     Y_test = acs[:, -1, :, i].reshape(nopl * weeks,)
 
-    lr = sklearn.linear_model.Lasso(alpha=0.5)
+    lr = sklearn.linear_model.Lasso(alpha = 0.1)
 
     lr.fit(X_train, Y_train)
     y_test_pred = lr.predict(X_test)
