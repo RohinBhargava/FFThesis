@@ -10,6 +10,9 @@ raw, mean, std, acs, mean_acc, std_acc, _ = commongbg.allDataParse(YEAR_ST,YEAR_
 nopl, years, weeks, stats = raw.shape
 
 total_loss = 0
+total_mae_loss = 0
+
+hidden_units = len(raw)
 
 d_slice = [names.index(i) for i in TOP_FIVE[pos]]
 t5_dict = dict()
@@ -36,16 +39,16 @@ for i in range(len(PARAMS[pos])):
 
     def RNN(x, weights, biases):
         x = tf.unstack(x, weeks,  1)
-        lstm_cell = rnn.BasicLSTMCell(len(raw), forget_bias=1.0)
+        lstm_cell = rnn.BasicLSTMCell(hidden_units, forget_bias=1.0)
         outputs, states = rnn.static_rnn(lstm_cell, x, dtype=tf.float32)
         return tf.matmul(outputs[-1], weights) + biases
 
-    W_out = weight_variable([len(raw), weeks])
+    W_out = weight_variable([hidden_units, weeks])
     b_out = bias_variable([weeks])
 
     y = RNN(x, W_out, b_out)
     cost = tf.losses.mean_squared_error(y_, y)
-    train_step = tf.train.AdamOptimizer(0.01).minimize(cost)
+    train_step = tf.train.AdamOptimizer(0.005).minimize(cost)
 
     test = y_ * std_acc[-1, :, i] + mean_acc[-1, :, i]
     pred = y * std[-1, :, i] + mean[-1, :, i]
@@ -59,7 +62,7 @@ for i in range(len(PARAMS[pos])):
     sess.run(tf.local_variables_initializer())
 
     loss = float('inf')
-    ave_loss = None
+    mae_loss = float('inf')
     for b in range(50):
         fd = {x: X_train.reshape(nopl, weeks, stats), y_: Y_train.reshape(nopl,  weeks)}
         fd_test = {x: X_test.reshape(nopl, weeks, stats), y_: Y_test.reshape(nopl,  weeks)}
@@ -67,11 +70,14 @@ for i in range(len(PARAMS[pos])):
         r = accuracy.eval(feed_dict=fd_test)
         if r < loss:
             loss = min(loss, r)
-            tests = Y_test * std_acc[-1, :, i] + mean_acc[-1, :, i]
+            tests = test.eval(feed_dict=fd_test)
             preds = pred.eval(feed_dict=fd_test)
+            y_.eval(feed_dict=fd_test)
+            mae_loss = mean_absolute_error((np.sum(tests, axis=1) - smean[-1, i])/sstd[-1, i], (np.sum(preds, axis=1) - smean[-1, i])/sstd[-1, i])
 
     sess.close()
     total_loss += loss
+    total_mae_loss += mae_loss
 
     for pl_i in range(len(d_slice)):
         pl = TOP_FIVE[pos][pl_i]
@@ -81,6 +87,7 @@ for i in range(len(PARAMS[pos])):
         test_c = np.sum(tests[d_slice[pl_i]])
         t5_dict[pl].append((pred_c, test_c))
 
-    print (PARAMS[pos][i], loss, mean_absolute_error(np.sum(tests, axis=1), np.sum(preds, axis=1)))
+    print (PARAMS[pos][i], loss, mae_loss, mean_absolute_error(np.sum(tests, axis=1), np.sum(preds, axis=1)))
 
-print (total_loss/len(PARAMS[pos]), t5_dict)
+print ('Avg', total_loss/len(PARAMS[pos]), total_mae_loss/len(PARAMS[pos]), '-')
+print(t5_dict)

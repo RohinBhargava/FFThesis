@@ -10,7 +10,11 @@ raw, mean, std, names = allDataParse(YEAR_ST,YEAR_END, pos)
 d_slice = [names.index(i) for i in TOP_FIVE[pos]]
 t5_dict = dict()
 
+hidden_units = len(raw)
+
 total_loss = 0
+total_mae_loss = 0
+
 for i in range(len(PARAMS[pos])):
     X_train = raw[:, :-2, i]
     X_test = raw[:, 1:-1, i]
@@ -32,11 +36,11 @@ for i in range(len(PARAMS[pos])):
 
     def RNN(x, weights, biases):
         x = tf.unstack(x, YDIFF - 1, 1)
-        lstm_cell = rnn.BasicLSTMCell(len(raw), forget_bias=1.0)
+        lstm_cell = rnn.BasicLSTMCell(hidden_units, forget_bias=1.0)
         outputs, states = rnn.static_rnn(lstm_cell, x, dtype=tf.float32)
         return tf.matmul(outputs[-1], weights) + biases
 
-    W_out = weight_variable([len(raw), 1])
+    W_out = weight_variable([hidden_units, 1])
     b_out = bias_variable([1])
 
     y = RNN(x, W_out, b_out)
@@ -52,7 +56,7 @@ for i in range(len(PARAMS[pos])):
     sess.run(tf.local_variables_initializer())
 
     loss = float('inf')
-    ave_loss = None
+    mae_loss = float('inf')
     for b in range(50):
         fd = {x: X_train.reshape(len(X_train), YDIFF - 1, 1), y_: Y_train.reshape(len(Y_train), 1)}
         fd_test = {x: X_test.reshape(len(X_test), YDIFF - 1, 1), y_: Y_test.reshape(len(Y_test), 1)}
@@ -60,8 +64,9 @@ for i in range(len(PARAMS[pos])):
         r = accuracy.eval(feed_dict=fd)
         if r < loss:
             loss = min(loss, r)
-            tests = Y_test
-            preds = y.eval(feed_dict=fd)
+            tests = y_.eval(feed_dict=fd_test)
+            preds = y.eval(feed_dict=fd_test)
+            mae_loss = mean_absolute_error(preds, tests)
 
     for pl_i in range(len(d_slice)):
         pl = TOP_FIVE[pos][pl_i]
@@ -74,6 +79,8 @@ for i in range(len(PARAMS[pos])):
     sess.close()
 
     total_loss += loss
-    print (PARAMS[pos][i], loss, mean_absolute_error(preds, tests) * std[-1, i])
+    total_mae_loss += mae_loss
+    print (PARAMS[pos][i], loss, mae_loss, mean_absolute_error(preds * std[-1, i] + mean[-1, i], tests * std[-1, i] + mean[-1, i]))
 
-print (total_loss/len(PARAMS[pos]), t5_dict)
+print ('Avg', total_loss/len(PARAMS[pos]), total_mae_loss/len(PARAMS[pos]), '-')
+print(t5_dict)

@@ -8,6 +8,7 @@ raw, mean, std, acs, mean_acc, std_acc, _ = commongbg.allDataParse(YEAR_ST,YEAR_
 nopl, years, weeks, stats = raw.shape
 
 total_loss = 0
+total_mae_loss = 0
 
 d_slice = [names.index(i) for i in TOP_FIVE[pos]]
 t5_dict = dict()
@@ -19,7 +20,7 @@ for i in range(len(PARAMS[pos])):
     Y_train = acs[:, -2, :, i].reshape(nopl * weeks,)
     Y_test = acs[:, -1, :, i].reshape(nopl * weeks,)
 
-    lr = sklearn.model_selection.GridSearchCV(sklearn.svm.SVR(), {'kernel':['linear', 'rbf'], 'gamma':[0.01, 0.1], 'C':[0.1, 1, 10]}, n_jobs=-1, cv=5)
+    lr = sklearn.model_selection.GridSearchCV(sklearn.svm.SVR(), {'kernel':['linear', 'rbf'], 'gamma':[0.01, 0.1], 'C':[0.01, 0.1, 1, 10]}, n_jobs=-1, cv=5)
 
     lr.fit(X_train, Y_train)
     y_test_pred = lr.best_estimator_.predict(X_test)
@@ -31,8 +32,10 @@ for i in range(len(PARAMS[pos])):
     normal_pred = (np.sum(pred, axis=1) - smean[-1, i])/sstd[-1, i]
 
     loss = mean_squared_error(normal_test, normal_pred)
+    mae_loss = mean_absolute_error(normal_test, normal_pred)
 
     total_loss += loss
+    total_mae_loss += mae_loss
 
     for pl_i in range(len(d_slice)):
         pl = TOP_FIVE[pos][pl_i]
@@ -42,6 +45,7 @@ for i in range(len(PARAMS[pos])):
         test_c = np.sum(test[d_slice[pl_i]])
         t5_dict[pl].append((pred_c, test_c))
 
-    print (lr.best_params_, PARAMS[pos][i], loss, mean_absolute_error(normal_pred, normal_test) * sstd[-1, i])
+    print (PARAMS[pos][i], loss, mae_loss, mean_absolute_error(np.sum(test, axis=1), np.sum(pred, axis=1)))
 
-print (total_loss/len(PARAMS[pos]), t5_dict)
+print ('Avg', total_loss/len(PARAMS[pos]), total_mae_loss/len(PARAMS[pos]), '-')
+print(t5_dict)
