@@ -1,6 +1,6 @@
-import sklearn.linear_model, sys, common, commongbg
+import sklearn.linear_model, sklearn.model_selection, sys, common, commongbg
 from common import YEAR_ST, YEAR_END, PARAMS, np
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 pos = sys.argv[1]
 seasons, smean, sstd, names = common.allDataParse(YEAR_ST,YEAR_END, pos)
@@ -16,18 +16,21 @@ for i in range(len(PARAMS[pos])):
     Y_train = acs[:, -2, :, i].reshape(nopl * weeks,)
     Y_test = acs[:, -1, :, i].reshape(nopl * weeks,)
 
-    lr = sklearn.linear_model.Ridge(alpha=0.5)
+    lr = sklearn.model_selection.GridSearchCV(sklearn.linear_model.Ridge(), {'fit_intercept':[True,False], 'alpha':[0.01, 0.05, 0.1, 0.2, 0.4, 0.5, 0.6, 0.8, 0.9, 0.95, 0.99]}, n_jobs=-1, cv=5)
 
     lr.fit(X_train, Y_train)
-    y_test_pred = lr.predict(X_test)
+    y_test_pred = lr.best_estimator_.predict(X_test)
 
     test = Y_test.reshape(nopl, weeks) * std_acc[-1, :, i] + mean_acc[-1, :, i]
     pred = y_test_pred.reshape(nopl, weeks) * std[-1, :, i] + mean[-1, :, i]
 
-    loss = mean_squared_error((np.sum(test, axis=1) - smean[-1, i])/sstd[-1, i], (np.sum(pred, axis=1) - smean[-1, i])/sstd[-1, i])
+    normal_test = (np.sum(test, axis=1) - smean[-1, i])/sstd[-1, i]
+    normal_pred = (np.sum(pred, axis=1) - smean[-1, i])/sstd[-1, i]
+
+    loss = mean_squared_error(normal_test, normal_pred)
 
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.mean(np.sum(abs(pred - test), axis=1)), np.sum(test[5]), np.sum(pred[5]))
+    print (lr.best_params_, PARAMS[pos][i], loss, mean_absolute_error(normal_pred, normal_test) * sstd[-1, i])
 
 print (total_loss/len(PARAMS[pos]))

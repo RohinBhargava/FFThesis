@@ -1,6 +1,6 @@
 import sklearn.linear_model, sys, common, commongbg
 from common import YEAR_ST, YEAR_END, PARAMS, np
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 from tensorflow.contrib import rnn
 import warnings, tensorflow as tf, sys
 
@@ -69,6 +69,4 @@ for i in range(len(PARAMS[pos])):
     sess.close()
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.mean(np.sum(abs(preds - tests), axis=1)), np.sum(tests[0]), np.sum(preds[0]))
-
-print (total_loss/len(PARAMS[pos]))
+    print (PARAMS[pos][i], loss, mean_absolute_error(np.sum(tests, axis=1), np.sum(preds, axis=1)))
