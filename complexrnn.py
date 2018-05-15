@@ -1,5 +1,5 @@
 import sklearn.linear_model, sys, common, commongbg
-from common import YEAR_ST, YEAR_END, PARAMS, np
+from common import YEAR_ST, YEAR_END, PARAMS, TOP_FIVE, np
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 from tensorflow.contrib import rnn
 import warnings, tensorflow as tf, sys
@@ -10,6 +10,9 @@ raw, mean, std, acs, mean_acc, std_acc, _ = commongbg.allDataParse(YEAR_ST,YEAR_
 nopl, years, weeks, stats = raw.shape
 
 total_loss = 0
+
+d_slice = [names.index(i) for i in TOP_FIVE[pos]]
+t5_dict = dict()
 
 X_train = raw[:, -2, :, :]
 X_test = raw[:, -1, :, :]
@@ -58,15 +61,26 @@ for i in range(len(PARAMS[pos])):
     loss = float('inf')
     ave_loss = None
     for b in range(50):
-        fd = {x: X_train.reshape(len(X_train), weeks, stats), y_: Y_train.reshape(len(Y_train),  weeks)}
+        fd = {x: X_train.reshape(nopl, weeks, stats), y_: Y_train.reshape(nopl,  weeks)}
+        fd_test = {x: X_test.reshape(nopl, weeks, stats), y_: Y_test.reshape(nopl,  weeks)}
         train_step.run(feed_dict=fd)
-        r = accuracy.eval(feed_dict=fd)
+        r = accuracy.eval(feed_dict=fd_test)
         if r < loss:
             loss = min(loss, r)
-            tests = test.eval(feed_dict=fd)
-            preds = pred.eval(feed_dict=fd)
+            tests = Y_test * std_acc[-1, :, i] + mean_acc[-1, :, i]
+            preds = pred.eval(feed_dict=fd_test)
 
     sess.close()
     total_loss += loss
 
+    for pl_i in range(len(d_slice)):
+        pl = TOP_FIVE[pos][pl_i]
+        if pl not in t5_dict:
+            t5_dict[pl] = []
+        pred_c = np.sum(preds[d_slice[pl_i]])
+        test_c = np.sum(tests[d_slice[pl_i]])
+        t5_dict[pl].append((pred_c, test_c))
+
     print (PARAMS[pos][i], loss, mean_absolute_error(np.sum(tests, axis=1), np.sum(preds, axis=1)))
+
+print (total_loss/len(PARAMS[pos]), t5_dict)

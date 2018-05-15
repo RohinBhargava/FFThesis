@@ -1,4 +1,4 @@
-from common import YEAR_ST, YEAR_END, PARAMS, YDIFF, allDataParse, np
+from common import YEAR_ST, YEAR_END, PARAMS, TOP_FIVE, allDataParse, np
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
 import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm
