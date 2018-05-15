@@ -1,7 +1,7 @@
-from common import YEAR_ST, YEAR_END, PARAMS, TOP_FIVE, allDataParse, np
+from common import YEAR_ST, YEAR_END, PARAMS, TOP_FIVE, YDIFF, allDataParse, np
 from statsmodels.tsa.arima_model import ARIMA
 from sklearn.metrics import mean_squared_error
-import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm
+import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm, math
 
 pos = sys.argv[1]
 raw, mean, std, names = allDataParse(YEAR_ST,YEAR_END, pos)
@@ -31,21 +31,24 @@ for i in range(len(PARAMS[pos])):
             else:
                 continue
 
-            # arima = ARIMA(X[j], (1, 1, 2))
+            # arima = ARIMA(time, (0, 1, 1))
             arima = sm.tsa.statespace.SARIMAX(time, order=(1,1,1), enforce_stationarity=False, enforce_invertibility=False)
 
-            fit = arima.fit(disp=False)
+            fit = arima.fit(disp=0)
             # print fit.summary()
             # print (fit.forecast())
 
             y_test_pred = fit.forecast()[0]
 
+            if math.isnan(y_test_pred):
+                y_test_pred = 0
+
             preds.append(y_test_pred)
 
-    loss = mean_squared_error(np.array(realY), np.array(preds))
+    loss = mean_squared_error(np.array(preds), np.array(realY))
     total_loss += loss
 
-    print (PARAMS[pos][i], loss, np.sqrt(loss) * std[-1, i], "No. Skipped: " + str(len(Y) - len(realY)))
+    print (PARAMS[pos][i], loss, "No. Skipped: " + str(len(Y) - len(realY)))
 
 print (total_loss/len(PARAMS[pos]))
 

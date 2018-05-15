@@ -27,8 +27,8 @@ for i in range(len(PARAMS[pos])):
     y_ = tf.placeholder(tf.float32, shape=[None, weeks])
 
     def weight_variable(shape):
-      initial = tf.truncated_normal(shape, stddev=0.1)
-      return tf.Variable(initial)
+      initial = tf.contrib.layers.xavier_initializer(uniform=True, seed=3)
+      return tf.Variable(initial(shape))
 
     def bias_variable(shape):
       initial = tf.constant(0.1, shape=shape)

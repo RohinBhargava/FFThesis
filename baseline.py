@@ -33,7 +33,7 @@ for i in range(len(PARAMS[pos])):
         test = Y_test[d_slice[pl_i]] * std[-1, i] + mean[-1, i]
         t5_dict[pl].append((pred, test))
 
-    print (PARAMS[pos][i], mean_absolute_error(y_test_pred, Y_test) * std[-1, i])
+    print (PARAMS[pos][i], loss, mean_absolute_error(y_test_pred, Y_test) * std[-1, i])
 
 print (total_loss/len(PARAMS[pos]), t5_dict)
 
