@@ -10,6 +10,8 @@ raw, mean, std, names = allDataParse(YEAR_ST,YEAR_END, pos)
 d_slice = [names.index(i) for i in TOP_FIVE[pos]]
 t5_dict = dict()
 
+learning_rates = { 'QB' : 0.02, 'WR' : 0.01, 'RB' : 0.01, 'TE' : 0.05 }
+
 hidden_units = len(raw)
 
 total_loss = 0
@@ -45,7 +47,7 @@ for i in range(len(PARAMS[pos])):
 
     y = RNN(x, W_out, b_out)
     cost = tf.losses.mean_squared_error(y_, y)
-    train_step = tf.train.AdamOptimizer(0.02).minimize(cost)
+    train_step = tf.train.AdamOptimizer(learning_rates[pos]).minimize(cost)
 
     tests = None
     preds = None

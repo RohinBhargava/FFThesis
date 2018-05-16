@@ -1,0 +1,479 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{QB}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i baseline.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.3030291 0.28896078 33.706036
+Att 0.29279423 0.29338047 54.24973
+Yds 0.29092473 0.27029836 360.3853
+TD 0.36160937 0.30769813 2.6424994
+Int 0.46955752 0.4194743 1.8852175
+RAtt 0.33415672 0.26503408 5.4651856
+RYds 0.51621073 0.29928255 32.949608
+RTD 0.50395894 0.31108367 0.35629645
+Avg 0.38403016701340675 0.3069015443325043 -
+\{'BradTo00': [(238.69951, 385.0), (359.39432, 581.0), (2950.733, 4576.9995), (22.962038, 32.0), (2.4596379, 8.0), (26.292381, 25.0), (36.34636, 28.0), (-0.066176504, 0.0)], 'WilsRu00': [(286.7024, 339.0), (448.80115, 553.0), (3452.5237, 3983.0), (21.151388, 34.0), (8.124129, 11.0), (72.91178, 95.0), (287.69385, 586.0), (-0.066452235, 3.0)], 'WentCa00': [(307.9372, 265.0), (497.74277, 440.0), (3120.591, 3296.0), (13.399103, 33.0), (11.052911, 7.0), (43.61978, 64.0), (140.20349, 299.0), (1.5684631, 0.0)], 'BreeDr00': [(378.81348, 386.0), (553.47516, 536.0), (4219.1494, 4334.0), (29.689837, 23.0), (13.468362, 8.0), (23.96283, 33.0), (18.579546, 12.000002), (1.9152533, 2.0)], 'RodgAa00': [(343.13846, 154.0), (526.2547, 238.0), (3702.8198, 1675.0), (26.88888, 16.0), (5.68686, 6.0), (57.521248, 24.0), (275.85687, 126.0), (2.370225, 0.0)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i arima.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.3147040330630448 0.27572737521151 32.16241582149892
+Att 0.34004255632083724 0.29240182790705727 54.06876351287413
+Yds 0.3116555383253784 0.26401937123304925 352.01362033008223
+TD 0.36936406960040574 0.29234191649060637 2.510620817960404
+Int 0.48284175345969393 0.3840540338978545 1.7260302495643265
+RAtt 0.38748157021818547 0.299915552617099 6.184465972448124
+RYds 0.4561243533260198 0.30820397061904964 33.93181683921239
+RTD 0.6209411791686792 0.3459584336053385 0.3962398940378531
+Avg 0.4103943816852806 0.30782781019769556 -
+\{'BradTo00': [(327.80242223386307, 385.0), (386.53928475578647, 581.0), (3710.159957782877, 4576.9995), (27.81287265431612, 32.0), (1.7501149014590314, 8.0), (28.331027339877526, 25.0), (67.20397768070532, 28.0), (1.1985515230641484, 0.0)], 'WilsRu00': [(316.32655060895274, 339.0), (526.2727078045848, 553.0), (3775.7600758792933, 3983.0), (21.62372164334652, 34.0), (11.361074657454337, 11.0), (87.7895389927116, 95.0), (474.8767393167014, 586.0), (2.3268450001863212, 3.0)], 'WentCa00': [(337.23262259116746, 265.0), (544.9685494740631, 440.0), (3424.8233347190694, 3296.0), (14.378045843796608, 33.0), (12.532071028050307, 7.0), (47.68547986830652, 64.0), (164.7263632814005, 299.0), (1.9172765608579188, 0.0)], 'BreeDr00': [(398.1031741765031, 386.0), (594.5152720594965, 536.0), (4461.890585601244, 4334.0), (38.175903211317284, 23.0), (11.515422283851557, 8.0), (22.133868279291672, 33.0), (26.763565026880936, 12.000002), (1.2473348306953715, 2.0)], 'RodgAa00': [(288.76903654710827, 154.0), (479.47561075837075, 238.0), (3445.6522534610917, 1675.0), (30.09442274533041, 16.0), (6.0754676774006375, 6.0), (71.54602714416369, 24.0), (396.72058756730723, 126.0), (1.6259389475654733, 0.0)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}72}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i rnn.py QB
+         \PY{c+c1}{\PYZsh{} 0.02 learning rate}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.16414288 0.30314833 35.36096
+Att 0.17287472 0.324816 60.062546
+Yds 0.1420077 0.29088312 387.83072
+TD 0.11736262 0.30396795 2.6104636
+Int 0.2543954 0.50341845 2.2624824
+RAtt 0.12490891 0.29515013 6.0862017
+RYds 0.16026083 0.24941933 27.459906
+RTD 0.18917179 0.4182038 0.47898528
+Avg 0.16564060375094414 0.3361258879303932 -
+\{'BradTo00': [(302.99713134765625, 385.0), (497.2164001464844, 581.0), (3729.935546875, 4576.99951171875), (12.904741287231445, 32.0), (0.7414312362670898, 8.0), (17.867725372314453, 25.0), (44.6112060546875, 28.0), (0.03191521763801575, 0.0)], 'WilsRu00': [(266.59228515625, 339.0), (418.96356201171875, 553.0), (3425.851806640625, 3983.0), (26.989709854125977, 34.0), (6.451193332672119, 11.0), (69.08724212646484, 95.0), (405.96759033203125, 586.0), (0.5999361872673035, 3.0)], 'WentCa00': [(348.15869140625, 265.0), (563.0192260742188, 440.0), (3452.584228515625, 3296.0), (11.889123916625977, 33.0), (13.909865379333496, 7.0), (47.75647735595703, 64.0), (136.73902893066406, 299.0), (1.3451544046401978, 0.0)], 'BreeDr00': [(382.4853820800781, 386.0), (602.2572021484375, 536.0), (4509.80419921875, 4334.0), (23.51213264465332, 23.0), (16.417739868164062, 8.0), (20.670499801635742, 33.0), (11.939094543457031, 12.000001907348633), (0.9636440277099609, 2.0)], 'RodgAa00': [(220.1070098876953, 154.0), (469.98291015625, 238.0), (3699.767822265625, 1675.0), (6.5005598068237305, 16.0), (4.647802829742432, 6.0), (72.73848724365234, 24.0), (359.24822998046875, 126.0), (3.1689321994781494, 0.0)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexlr.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.05383619216007046 0.13299008882793178 15.512723840477717
+Att 0.053818829030547674 0.13208464552300841 24.424106852357472
+Yds 0.05899551412936768 0.12992866916208667 173.23221973205924
+TD 0.11431111576972267 0.1993633705713027 1.7121247004217
+Int 0.18538168013858652 0.27161687112273225 1.2207108364195176
+RAtt 0.12970392543730302 0.18096943192039347 3.73171479026518
+RYds 0.1843305369715398 0.2150653448982539 23.677689964293947
+RTD 0.4599007955386968 0.33711208679358656 0.3861078254051036
+Avg 0.15503482364697935 0.199891313602412 -
+\{'BradTo00': [(333.10515652876865, 385.0), (524.4870471902827, 581.0), (3790.8752214191654, 4577.0), (22.477894993570295, 32.0), (11.544535311050772, 8.0), (33.908855218461454, 25.0), (114.15258894534539, 28.0), (1.2149939125492621, 1.0408340855860843e-17)], 'WilsRu00': [(302.0121971282999, 339.0), (493.91423853587935, 553.0), (3528.0945563853793, 3983.0), (22.142967638464132, 34.0), (11.421232535182673, 11.0), (66.52701494276198, 95.0), (348.43608102400265, 586.0), (2.6719220763577924, 3.0)], 'WentCa00': [(272.70525090564865, 265.0), (445.0467115460136, 440.0), (3181.474933126855, 3296.0), (19.762977762273984, 33.0), (10.266001861059673, 7.0), (50.33322289325855, 64.0), (238.12488271128467, 299.0), (1.6745155058509387, 1.0408340855860843e-17)], 'BreeDr00': [(333.1069582694939, 386.0), (519.2275846913088, 536.0), (3798.590532052075, 4334.0), (22.145473439771525, 23.0), (9.888799354311722, 8.0), (33.40955373354332, 33.0), (118.97798895207838, 12.0), (1.3346052919306794, 2.0)], 'RodgAa00': [(158.79948572781194, 154.0), (253.27691848006205, 238.0), (1810.105569549288, 1675.0), (11.195090461965002, 16.0), (5.830934729305431, 6.0), (25.484165585149157, 24.0), (104.41207975566036, 126.0), (0.9613749482993375, 1.0408340855860843e-17)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexlar.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.06434718120772681 0.16645459327264395 19.416214848600323
+Att 0.06320538482683251 0.1689813991535278 31.246779159260385
+Yds 0.06936524126280673 0.16457868809688667 219.4306433174278
+TD 0.13896839671676167 0.23420212141979224 2.011318507632153
+Int 0.21150172004027964 0.30675452872994746 1.3786278289473668
+RAtt 0.15826020604790253 0.20976508309714625 4.325501023947312
+RYds 0.1892671788236778 0.2200584240892267 24.227404661968524
+RTD 0.5145264538722375 0.37599079070787716 0.4306371449133274
+Avg 0.17618022034977815 0.23084820357088104 -
+\{'BradTo00': [(314.6650865437779, 385.0), (498.56020074676485, 581.0), (3590.8988820664035, 4577.0), (20.956346275603813, 32.0), (10.659962791673774, 8.0), (32.27674153708344, 25.0), (110.11494808896711, 28.0), (1.059471903539248, 1.0408340855860843e-17)], 'WilsRu00': [(292.6220450617918, 339.0), (471.3150320709829, 553.0), (3384.5841368639512, 3983.0), (20.602584383468674, 34.0), (10.165163685475388, 11.0), (61.724877412910445, 95.0), (342.877740679401, 586.0), (2.3509412600821658, 3.0)], 'WentCa00': [(254.3003157925403, 265.0), (411.18772223659266, 440.0), (2939.088225338235, 3296.0), (17.682277593566646, 33.0), (8.876780188505013, 7.0), (46.790523582852046, 64.0), (232.96471971628443, 299.0), (1.5623074576870635, 1.0408340855860843e-17)], 'BreeDr00': [(311.4908685624406, 386.0), (485.65235876343866, 536.0), (3541.4826071526604, 4334.0), (20.709209183137375, 23.0), (10.190000430480023, 8.0), (32.70692307355529, 33.0), (116.88813489873168, 12.0), (1.0383895835455337, 2.0)], 'RodgAa00': [(155.71153289369514, 154.0), (247.26521397803162, 238.0), (1776.5691028758336, 1675.0), (10.736187442898508, 16.0), (5.382743092252397, 6.0), (24.09875768836873, 24.0), (104.27493184563656, 126.0), (0.9134963737789921, 1.0408340855860843e-17)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexrr.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.053824394894103234 0.133024402329107 15.516726363315477
+Att 0.05381620050194699 0.13210653060115454 24.428153677671624
+Yds 0.05896550009987866 0.12995152907030316 173.26269855300575
+TD 0.11430078784704982 0.1993969172999503 1.7124127983936153
+Int 0.18533158105983127 0.27160000185823907 1.220635021931691
+RAtt 0.12970340699269298 0.18099782646070445 3.7323003053155235
+RYds 0.18439076708405905 0.21512207241984382 23.683935399462896
+RTD 0.46008714612719104 0.33716253344433617 0.38616560395230776
+Avg 0.15505247307584413 0.1999202266854548 -
+\{'BradTo00': [(333.1423708306262, 385.0), (524.614528143724, 581.0), (3791.2678242668608, 4577.0), (22.47512122088337, 32.0), (11.548974216920065, 8.0), (33.933163805782904, 25.0), (114.17611129154092, 28.0), (1.2138353025266695, 1.0408340855860843e-17)], 'WilsRu00': [(302.0344095272859, 339.0), (493.9512689936207, 553.0), (3528.34793590466, 3983.0), (22.14437646390487, 34.0), (11.419405441616844, 11.0), (66.51447461091577, 95.0), (348.38028981565037, 586.0), (2.671706023854018, 3.0)], 'WentCa00': [(272.6263817673471, 265.0), (444.7575948145527, 440.0), (3180.4672004426952, 3296.0), (19.765995943773323, 33.0), (10.246615904999153, 7.0), (50.28188055865551, 64.0), (238.01796370482822, 299.0), (1.676743242312285, 1.0408340855860843e-17)], 'BreeDr00': [(333.2512311712209, 386.0), (519.8474398320781, 536.0), (3800.354443739319, 4334.0), (22.130823997452097, 23.0), (9.932668560380872, 8.0), (33.50194773048749, 33.0), (119.10863783891128, 12.0), (1.3293255161343351, 2.0)], 'RodgAa00': [(158.8160611356997, 154.0), (253.38211393099178, 238.0), (1810.41717351111, 1675.0), (11.192196118612703, 16.0), (5.8383207366138885, 6.0), (25.495836265866664, 24.0), (104.44155555638682, 126.0), (0.9603707810719363, 1.0408340855860843e-17)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexsvr.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.018211794475636867 0.10698365580022538 12.479184896409
+Att 0.01778778474849758 0.08648960996359192 15.993013169736816
+Yds 0.022863707738173894 0.09026523372346748 120.34947254822065
+TD 0.15053899549645838 0.22368826561611452 1.9210259319871663
+Int 0.4870757571446384 0.392634205182437 1.764591525681013
+RAtt 0.14524743212084174 0.15180895899249836 3.1304056798734226
+RYds 0.24185170657455632 0.1823952501461806 20.08086512480314
+RTD 1.00531773410756 0.4613456103273078 0.5283974005735825
+Avg 0.2611118640507954 0.21195134871897786 -
+\{'BradTo00': [(334.63476322552026, 385.0), (506.6142108242522, 581.0), (3871.225314271823, 4577.0), (18.180042050868366, 32.0), (5.090341517490776, 8.0), (26.041845994007762, 25.0), (40.567294365557224, 28.0), (0.18951862263894875, 1.0408340855860843e-17)], 'WilsRu00': [(313.3960414951556, 339.0), (525.6615384538296, 553.0), (3764.478369061796, 3983.0), (17.46512067699977, 34.0), (7.395065211919524, 11.0), (61.836187527999996, 95.0), (288.48042956029246, 586.0), (0.265059011624979, 3.0)], 'WentCa00': [(287.16373974459464, 265.0), (467.71605091064686, 440.0), (3469.4437164038545, 3296.0), (16.738370728286974, 33.0), (5.534509884148374, 7.0), (45.339888781712574, 64.0), (174.91691877918225, 299.0), (0.23194356524706478, 1.0408340855860843e-17)], 'BreeDr00': [(368.1631032241129, 386.0), (517.0466960742026, 536.0), (4271.793237209464, 4334.0), (19.640853081325332, 23.0), (4.134662976656856, 8.0), (28.566707353138042, 33.0), (59.932143584073245, 12.0), (0.2057886155485419, 2.0)], 'RodgAa00': [(175.97471023021902, 154.0), (274.70403354014593, 238.0), (2066.540975815865, 1675.0), (9.64338578209367, 16.0), (4.513375284282225, 6.0), (24.321859453284446, 24.0), (80.3017728782561, 126.0), (0.22523421471028318, 1.0408340855860843e-17)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexgbt.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.0224873492600077 0.13123187813833928 15.307636099568587
+Att 0.0221347938692684 0.13188229973401516 24.38669057924015
+Yds 0.02866716264938256 0.13769374391149528 183.58529379877905
+TD 0.08995290991436126 0.16487947784742088 1.4159784006773632
+Int 0.17443943455541733 0.26085643708427675 1.1723508859458047
+RAtt 0.1281444376029132 0.24460980961848816 5.04402337295726
+RYds 0.16202576434833404 0.2553081292748859 28.108232561571135
+RTD 0.39262793138804525 0.3862257087990959 0.4423596019898053
+Avg 0.12755997294846622 0.21408593555100214 -
+\{'BradTo00': [(347.46596081056305, 385.0), (552.8211548745596, 581.0), (3999.1730168028125, 4577.0), (22.440161842716886, 32.0), (11.030963615712439, 8.0), (33.63358022504889, 25.0), (101.68757135652683, 28.0), (0.656965852232306, 1.0408340855860843e-17)], 'WilsRu00': [(329.4689574600891, 339.0), (534.3525219950928, 553.0), (3840.1571260991286, 3983.0), (22.01930752799288, 34.0), (11.632534476467928, 11.0), (71.7731098137755, 95.0), (369.9012724386949, 586.0), (2.5088148957101115, 3.0)], 'WentCa00': [(301.5682125151865, 265.0), (496.4909785655045, 440.0), (3526.505540475537, 3296.0), (21.464872001834244, 33.0), (10.696021465993603, 7.0), (51.783943378739224, 64.0), (250.1234831417388, 299.0), (1.8974731809439447, 1.0408340855860843e-17)], 'BreeDr00': [(365.94976433703846, 386.0), (578.7012446375035, 536.0), (4197.502342844446, 4334.0), (21.971295969948017, 23.0), (11.620062649246496, 8.0), (39.47257692253726, 33.0), (125.01008619322721, 12.0), (0.9092986496186211, 2.0)], 'RodgAa00': [(190.42255446769735, 154.0), (306.61191212555207, 238.0), (2148.293921131143, 1675.0), (12.368781374354832, 16.0), (6.655794893897365, 6.0), (29.710961084936308, 24.0), (126.5730072383024, 126.0), (1.0439478900896224, 1.0408340855860843e-17)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexrfr.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.025578495815802595 0.13735992027458468 16.02244594878511
+Att 0.02737113721235386 0.153461981202649 28.377044219080428
+Yds 0.03743655771238249 0.1715883152104575 228.77648878947724
+TD 0.10641304721613166 0.2215827606336409 1.9029439389057712
+Int 0.17687210845289986 0.3250007130742186 1.460630522153767
+RAtt 0.10090072015406962 0.18567150348431927 3.8286747564527635
+RYds 0.14921343704981474 0.18732131010308725 20.623201317834788
+RTD 0.3316140851347257 0.2876656667771888 0.32947488207700365
+Avg 0.11942494859352255 0.20870652134501827 -
+\{'BradTo00': [(352.35127712568317, 385.0), (556.3084053374984, 581.0), (4176.486345372695, 4577.0), (21.350457543092794, 32.0), (10.667169477102462, 8.0), (31.200628992507234, 25.0), (107.44199891917867, 28.0), (0.703271271343032, 1.0408340855860843e-17)], 'WilsRu00': [(339.61132101109473, 339.0), (536.4551340358986, 553.0), (3749.5415988802833, 3983.0), (23.63225953315535, 34.0), (12.61444589971828, 11.0), (69.8412957563721, 95.0), (350.03761352449067, 586.0), (3.2122782145010556, 3.0)], 'WentCa00': [(316.08981813581323, 265.0), (488.35522360271784, 440.0), (3499.7246533338957, 3296.0), (22.457773513816846, 33.0), (10.529428961018125, 7.0), (53.211196891803745, 64.0), (236.48459527070347, 299.0), (2.08167271224585, 1.0408340855860843e-17)], 'BreeDr00': [(363.9640510148839, 386.0), (579.8526839453775, 536.0), (4296.561574730034, 4334.0), (21.701398906445476, 23.0), (12.868803445735132, 8.0), (36.26846430362359, 33.0), (103.17345573927355, 12.0), (0.6862958209698342, 2.0)], 'RodgAa00': [(193.73031936552445, 154.0), (293.5616306809614, 238.0), (2061.927265666502, 1675.0), (14.25303944939305, 16.0), (6.670838393150731, 6.0), (30.983406517496935, 24.0), (131.89304196569333, 126.0), (1.2330145389064606, 1.0408340855860843e-17)]\}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{o}{\PYZpc{}}\PY{k}{run} \PYZhy{}i complexrnn.py QB
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Cmp 0.01853411 0.08360214 9.751834
+Att 0.02385505 0.08569763 15.846563
+Yds 0.024944274 0.09394983 125.26209
+TD 0.03356575 0.08070207 0.6930663
+Int 0.046499014 0.14413045 0.64775664
+RAtt 0.059579946 0.104036115 2.1452963
+RYds 0.055851217 0.10123145 11.145108
+RTD 0.06321658 0.113291316 0.12975703
+Avg 0.04075574269518256 0.10083012469112873 -
+\{'BradTo00': [(343.4204, 385.0), (548.4205, 581.0), (4216.826, 4577.0), (31.707214, 32.0), (6.4707603, 8.0), (21.912573, 25.0), (15.858967, 28.0), (0.035570562, -1.3038516e-08)], 'WilsRu00': [(285.16724, 339.0), (489.69016, 553.0), (3544.7847, 3983.0), (26.230408, 34.0), (8.812025, 11.0), (78.42895, 95.0), (476.29846, 586.0), (2.3691058, 3.0)], 'WentCa00': [(290.1039, 265.0), (436.56915, 440.0), (3412.7432, 3296.0), (30.195318, 33.0), (5.936387, 7.0), (59.100266, 64.0), (312.4371, 299.0), (-0.0051001757, -1.3038516e-08)], 'BreeDr00': [(346.5274, 386.0), (540.42957, 536.0), (4073.0146, 4334.0), (20.06414, 23.0), (7.104974, 8.0), (26.790966, 33.0), (31.02482, 12.0), (1.868597, 2.0)], 'RodgAa00': [(189.80667, 154.0), (265.66614, 238.0), (2583.8154, 1675.0), (12.7763, 16.0), (5.483903, 6.0), (25.246445, 24.0), (122.319214, 126.0), (0.22993773, -1.3038516e-08)]\}
+
+    \end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

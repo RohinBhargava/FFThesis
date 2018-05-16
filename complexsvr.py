@@ -20,7 +20,7 @@ for i in range(len(PARAMS[pos])):
     Y_train = acs[:, -2, :, i].reshape(nopl * weeks,)
     Y_test = acs[:, -1, :, i].reshape(nopl * weeks,)
 
-    lr = sklearn.model_selection.GridSearchCV(sklearn.svm.SVR(), {'kernel':['linear', 'rbf'], 'gamma':[0.01, 0.1], 'C':[0.01, 0.1, 1, 10]}, n_jobs=-1, cv=5)
+    lr = sklearn.model_selection.GridSearchCV(sklearn.svm.SVR(), {'kernel':['linear', 'rbf'], 'gamma':[0.01, 0.1]}, n_jobs=-1, cv=5)
 
     lr.fit(X_train, Y_train)
     y_test_pred = lr.best_estimator_.predict(X_test)

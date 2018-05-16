@@ -1,38 +1,27 @@
 from common import YEAR_ST, YEAR_END, PARAMS, TOP_FIVE, YDIFF, allDataParse, np
 from statsmodels.tsa.arima_model import ARIMA
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, mean_absolute_error
 import warnings, sys, matplotlib.pyplot as plt, statsmodels.api as sm, math
 
 pos = sys.argv[1]
 raw, mean, std, names = allDataParse(YEAR_ST,YEAR_END, pos)
 
 total_loss = 0
+total_mae_loss = 0
+
+d_slice = [names.index(i) for i in TOP_FIVE[pos]]
+t5_dict = dict()
 
 for i in range(len(PARAMS[pos])):
     # X_train, X_test, Y_train, Y_test = train_test_split(raw[:, :-1, i], raw[:, -1, i], test_size=0.3, random_state=1)
     X = raw[:, :-1, i]
     Y = raw[:, -1, i]
-    realY = []
     preds = []
 
     with warnings.catch_warnings():
         warnings.filterwarnings("ignore")
-        h = 0
         for j in range(len(X)):
-
-            k = 0
-            while k < YDIFF and (X[j, k] == 0 or (std[k, i] != 0 and X[j, k] == -mean[k, i]/std[k, i])):
-                k += 1
-
-            time = X[j][k:]
-
-            if len(time) >= 5:
-                realY.append(Y[j])
-            else:
-                continue
-
-            # arima = ARIMA(time, (0, 1, 1))
-            arima = sm.tsa.statespace.SARIMAX(time, order=(1,1,1), enforce_stationarity=False, enforce_invertibility=False)
+            arima = sm.tsa.statespace.SARIMAX(X[j], order=(0,1,1), enforce_stationarity=False, enforce_invertibility=False)
 
             fit = arima.fit(disp=0)
             # print fit.summary()
@@ -45,12 +34,24 @@ for i in range(len(PARAMS[pos])):
 
             preds.append(y_test_pred)
 
-    loss = mean_squared_error(np.array(preds), np.array(realY))
+    loss = mean_squared_error(np.array(preds), Y)
+    mae_loss = mean_absolute_error(np.array(preds), Y)
+
     total_loss += loss
+    total_mae_loss += mae_loss
 
-    print (PARAMS[pos][i], loss, "No. Skipped: " + str(len(Y) - len(realY)))
+    for pl_i in range(len(d_slice)):
+        pl = TOP_FIVE[pos][pl_i]
+        if pl not in t5_dict:
+            t5_dict[pl] = []
+        pred = preds[d_slice[pl_i]] * std[-1, i] + mean[-1, i]
+        test = Y[d_slice[pl_i]] * std[-1, i] + mean[-1, i]
+        t5_dict[pl].append((pred, test))
 
-print (total_loss/len(PARAMS[pos]))
+    print (PARAMS[pos][i], loss, mae_loss, mean_absolute_error(np.array(preds) * std[-1, i] + mean[-1, i], Y * std[-1, i] + mean[-1, i]))
+
+print ('Avg', total_loss/len(PARAMS[pos]), total_mae_loss/len(PARAMS[pos]), '-')
+print(t5_dict)
 
 # mse_arima = []
 # mse_arima_means = []
